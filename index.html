@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Naimjon Inomjonov — Resume PDF Viewer</title>
+    <title>Naimjon Inomjonov Resume Viewer</title>
     <style>
         * {
             margin: 0;
@@ -29,7 +29,7 @@
         }
         
         header {
-            background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+            background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
             color: white;
             padding: 30px;
             text-align: center;
@@ -61,7 +61,7 @@
         .file-icon {
             font-size: 48px;
             margin-right: 20px;
-            color: #1976d2;
+            color: #4e4376;
         }
         
         .file-details h3 {
@@ -76,7 +76,7 @@
         
         .pdf-container {
             width: 100%;
-            height: 650px;
+            height: 600px;
             border: 1px solid #eaeaea;
             border-radius: 8px;
             overflow: hidden;
@@ -112,13 +112,13 @@
         }
         
         .btn-download {
-            background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+            background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
             color: white;
         }
         
         .btn-download:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+            box-shadow: 0 5px 15px rgba(78, 67, 118, 0.4);
         }
         
         .btn-view {
@@ -168,34 +168,33 @@
 <body>
     <div class="container">
         <header>
-            <h1>Naimjon Inomjonov — Resume</h1>
-            <p class="subtitle">PDF rezumeingizni ko‘ring yoki yuklab oling</p>
+            <h1>Naimjon Inomjonov – Resume</h1>
+            <p class="subtitle">View and download the resume directly</p>
         </header>
         
         <div class="content">
             <div class="file-info">
-                <div class="file-icon">
-                    📄
-                </div>
+                <div class="file-icon">📄</div>
                 <div class="file-details">
                     <h3>Naimjon_Inomjonov_Resume.pdf</h3>
-                    <p class="file-meta">PDF hujjat • ~1 MB • So‘nggi o‘zgartirilgan: 2025-11-27</p>
+                    <p class="file-meta">PDF Document • Last updated: 2025</p>
                 </div>
             </div>
             
             <div class="pdf-container">
-                <iframe src="my_resume.pdf" class="pdf-viewer" type="application/pdf">
-                    <p>Sizning brauzeringiz PDF ko‘rsatishni qo‘llamaydi.
-                    <a href="my_resume.pdf" download>PDF-ni yuklab oling</a></p>
+                <iframe 
+                    src="https://raw.githubusercontent.com/Inomjonoff/resume/main/Naimjon_Inomjonov_Resume.pdf" 
+                    class="pdf-viewer" 
+                    type="application/pdf">
                 </iframe>
             </div>
             
             <div class="actions">
                 <button class="btn btn-download" onclick="downloadFile()">
-                    📥 Rezumeni yuklab olish
+                    📥 Download Resume
                 </button>
                 <button class="btn btn-view" onclick="openInNewTab()">
-                    🔍 Yangi oynada ochish
+                    🔍 Open in New Tab
                 </button>
             </div>
         </div>
@@ -206,9 +205,11 @@
     </div>
 
     <script>
+        const resumeURL = "https://raw.githubusercontent.com/Inomjonoff/resume/main/Naimjon_Inomjonov_Resume.pdf";
+
         function downloadFile() {
             const link = document.createElement('a');
-            link.href = 'my_resume.pdf';
+            link.href = resumeURL;
             link.download = 'Naimjon_Inomjonov_Resume.pdf';
             document.body.appendChild(link);
             link.click();
@@ -216,7 +217,7 @@
         }
         
         function openInNewTab() {
-            window.open('my_resume.pdf', '_blank');
+            window.open(resumeURL, '_blank');
         }
     </script>
 </body>
