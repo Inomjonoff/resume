@@ -3,222 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Naimjon Inomjonov Resume Viewer</title>
+    <title>Naimjon Resume</title>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
         body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
         }
-        
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        
-        header {
-            background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-        
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-        
-        .content {
-            padding: 30px;
-        }
-        
-        .file-info {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-        }
-        
-        .file-icon {
-            font-size: 48px;
-            margin-right: 20px;
-            color: #4e4376;
-        }
-        
-        .file-details h3 {
-            font-size: 1.4rem;
-            margin-bottom: 5px;
-        }
-        
-        .file-meta {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .pdf-container {
+
+        .viewer {
+            height: 100vh;
             width: 100%;
-            height: 600px;
-            border: 1px solid #eaeaea;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 25px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
         }
-        
-        .pdf-viewer {
-            width: 100%;
-            height: 100%;
-            border: none;
+
+        .download-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            padding: 10px 18px;
+            background: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+            z-index: 999;
         }
-        
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .btn {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .btn-download {
-            background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%);
-            color: white;
-        }
-        
-        .btn-download:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(78, 67, 118, 0.4);
-        }
-        
-        .btn-view {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-        
-        .btn-view:hover {
-            background-color: #e0e0e0;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-            font-size: 0.9rem;
-            border-top: 1px solid #eee;
-        }
-        
-        @media (max-width: 768px) {
-            .pdf-container {
-                height: 400px;
-            }
-            
-            .file-info {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .file-icon {
-                margin-right: 0;
-                margin-bottom: 10px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .pdf-container {
-                height: 300px;
-            }
-            
-            .actions {
-                flex-direction: column;
-            }
+
+        .download-btn:hover {
+            background: #0056b3;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Naimjon Inomjonov – Resume</h1>
-            <p class="subtitle">View and download the resume directly</p>
-        </header>
-        
-        <div class="content">
-            <div class="file-info">
-                <div class="file-icon">📄</div>
-                <div class="file-details">
-                    <h3>Naimjon_Inomjonov_Resume.pdf</h3>
-                    <p class="file-meta">PDF Document • Last updated: 2025</p>
-                </div>
-            </div>
-            
-            <div class="pdf-container">
-                <iframe 
-                    src="https://raw.githubusercontent.com/Inomjonoff/resume/main/Naimjon_Inomjonov_Resume.pdf" 
-                    class="pdf-viewer" 
-                    type="application/pdf">
-                </iframe>
-            </div>
-            
-            <div class="actions">
-                <button class="btn btn-download" onclick="downloadFile()">
-                    📥 Download Resume
-                </button>
-                <button class="btn btn-view" onclick="openInNewTab()">
-                    🔍 Open in New Tab
-                </button>
-            </div>
-        </div>
-        
-        <footer>
-            <p>© 2025 Naimjon Inomjonov | Resume Viewer</p>
-        </footer>
-    </div>
 
-    <script>
-        const resumeURL = "https://raw.githubusercontent.com/Inomjonoff/resume/main/Naimjon_Inomjonov_Resume.pdf";
+<!-- RAW GitHub PDF Link -->
+<a class="download-btn"
+   href="https://raw.githubusercontent.com/Inomjonoff/resume/aec6a1fa3deaee3e0e80fd5ff3537580939fdda2/Naimjon_Inomjonov_Resume.pdf"
+   download>
+    Download PDF
+</a>
 
-        function downloadFile() {
-            const link = document.createElement('a');
-            link.href = resumeURL;
-            link.download = 'Naimjon_Inomjonov_Resume.pdf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-        
-        function openInNewTab() {
-            window.open(resumeURL, '_blank');
-        }
-    </script>
+<iframe 
+    class="viewer"
+    src="https://raw.githubusercontent.com/Inomjonoff/resume/aec6a1fa3deaee3e0e80fd5ff3537580939fdda2/Naimjon_Inomjonov_Resume.pdf">
+</iframe>
+
 </body>
 </html>
