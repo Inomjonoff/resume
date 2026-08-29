@@ -749,7 +749,7 @@ Instant Score + Mistake Breakdown + Learning Analytics</pre>
     mixaro: {
         tag: "Flagship 03 · Case Study",
         title: "Mixaro Shop — Telegram + Web E-Commerce Dropshipping Ecosystem",
-        github: "https://github.com/Inomjonoff",
+        github: "https://github.com/Inomjonoff/mixaro-shop",
         demo: "#contact",
         content: {
             uz: `
