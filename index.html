@@ -1,132 +1,1467 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Naimjon Resume</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naimjon Inomjonov | Python Backend & AI Automation Developer</title>
+    <!-- Inline SVG Favicon -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💻</text></svg>">
+    <!-- Meta tags for SEO -->
+    <meta name="description"
+        content="Naimjon Inomjonov — Python Backend & AI Automation Developer. I build practical AI-powered applications, business automation systems, Telegram bots, and scalable backend solutions.">
+    <meta name="keywords"
+        content="Naimjon Inomjonov, Python Developer, AI Automation, Backend Developer, FastAPI, aiogram, Telegram Mini Apps, PostgreSQL, Docker, EduAI, Pozitron Academy, Mixaro Shop, Uzbekistan, Tashkent">
+    <meta name="author" content="Naimjon Inomjonov">
 
-<style>
-    body {
-        margin: 0;
-        background: #e8e8e8;
-        font-family: Arial, sans-serif;
-    }
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Naimjon Inomjonov | Python Backend & AI Automation Developer">
+    <meta property="og:description"
+        content="I build practical AI-powered applications, automation systems, and scalable backend solutions.">
+    <meta property="og:image" content="assets/profile.png">
 
-    #toolbar {
-        width: 100%;
-        background: #222;
-        padding: 10px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        position: fixed;
-        top: 0;
-        z-index: 9999;
-    }
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
-    #toolbar button, #toolbar a {
-        background: #444;
-        color: #fff;
-        border: none;
-        padding: 8px 14px;
-        border-radius: 5px;
-        cursor: pointer;
-        text-decoration: none;
-    }
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    #toolbar button:hover, #toolbar a:hover {
-        background: #666;
-    }
-
-    #viewer {
-        width: 100%;
-        height: 100vh;
-        margin-top: 50px;
-        border: none;
-    }
-
-    #loading {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 22px;
-        color: #222;
-    }
-
-    #fallback {
-        display: none;
-        margin-top: 80px;
-        text-align: center;
-        font-size: 22px;
-        color: #111;
-    }
-
-</style>
-
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+    <!-- Background glowing radial elements -->
+    <div class="glow-bg">
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-cyan"></div>
+        <div class="blob blob-blue"></div>
+    </div>
 
-<!-- 🔧 PDF RAW GitHub link -->
-<script>
-    const pdfURL = "https://raw.githubusercontent.com/Inomjonoff/resume/aec6a1fa3deaee3e0e80fd5ff3537580939fdda2/Naimjon_Inomjonov_Resume.pdf";
-</script>
+    <!-- Header & Navigation -->
+    <header class="header" id="top-header">
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <span class="logo-code">&lt;</span><span class="logo-text">Naimjon</span><span class="logo-code">.dev
+                    /&gt;</span>
+            </a>
 
-<div id="toolbar">
-    <button onclick="zoomIn()">Zoom +</button>
-    <button onclick="zoomOut()">Zoom -</button>
-    <button onclick="fullscreen()">Fullscreen</button>
+            <nav class="nav" id="nav-menu">
+                <ul class="nav-list">
+                    <li><a href="#about" class="nav-link" data-key="nav_about">About</a></li>
+                    <li><a href="#services" class="nav-link" data-key="nav_services">Services</a></li>
+                    <li><a href="#projects" class="nav-link active" data-key="nav_projects">Projects</a></li>
+                    <li><a href="#skills" class="nav-link" data-key="nav_skills">Tech Stack</a></li>
+                    <li><a href="#github" class="nav-link" data-key="nav_github">GitHub</a></li>
+                    <li><a href="#experience" class="nav-link" data-key="nav_experience">Experience</a></li>
+                    <li><a href="#contact" class="nav-link" data-key="nav_contact">Contact</a></li>
+                </ul>
+            </nav>
 
-    <a href="#" id="downloadBtn" download>Download PDF</a>
-</div>
+            <div class="header-actions">
+                <!-- Language Switcher -->
+                <div class="lang-switcher">
+                    <button class="lang-btn current-lang" id="lang-menu-btn" aria-label="Change Language">
+                        <i class="fa-solid fa-globe"></i>
+                        <span id="active-lang">EN</span>
+                        <i class="fa-solid fa-chevron-down chevron"></i>
+                    </button>
+                    <ul class="lang-dropdown" id="lang-dropdown">
+                        <li data-lang="uz">O'zbekcha</li>
+                        <li data-lang="ru">Русский</li>
+                        <li data-lang="en" class="active">English</li>
+                    </ul>
+                </div>
 
-<div id="loading">Loading PDF...</div>
+                <!-- GitHub Quick Link -->
+                <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                    class="btn-icon header-github-btn" aria-label="GitHub Profile" title="GitHub Profile">
+                    <i class="fa-brands fa-github"></i>
+                </a>
 
-<iframe id="viewer"></iframe>
+                <a href="#contact" class="btn btn-primary btn-sm btn-header-contact" data-key="btn_hire">Hire Me</a>
 
-<div id="fallback">
-    ❗ Browser PDF ni ochmadi.  
-    <br><br>
-    <a href="#" id="fallbackDownload" download>Click to Download Resume</a>
-</div>
+                <!-- Mobile Menu Toggle -->
+                <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
+        </div>
+    </header>
 
-<script>
-    let scale = 1.0;
+    <main>
+        <!-- Hero Section (5-Second Positioning) -->
+        <section class="hero-section" id="hero">
+            <div class="container hero-container grid grid-2">
+                <div class="hero-content">
+                    <!-- Live Availability Badge -->
+                    <div class="badge status-live-badge" data-key="hero_badge">
+                        <span class="pulse-indicator"></span>
+                        <span data-key="hero_badge_text">Available for Remote / Contract Work</span>
+                    </div>
 
-    document.getElementById("downloadBtn").href = pdfURL;
-    document.getElementById("fallbackDownload").href = pdfURL;
+                    <div class="hero-intro">
+                        <span class="greet" data-key="hero_greet">Naimjon Inomjonov</span>
+                        <h1 class="hero-title">
+                            <span class="gradient-text title-role" data-key="hero_role">Python Backend & AI Automation
+                                Developer</span>
+                        </h1>
+                    </div>
 
-    const viewer = document.getElementById("viewer");
-    viewer.src = pdfURL;
+                    <p class="hero-description" data-key="hero_desc">
+                        I build practical AI-powered applications, automation systems, and backend solutions that turn
+                        complex business workflows into smooth digital products.
+                    </p>
 
-    // PDF yuklanganini tekshiramiz
-    viewer.onload = () => {
-        document.getElementById("loading").style.display = "none";
-    };
+                    <!-- Tech Highlight Badges -->
+                    <div class="hero-tech-chips">
+                        <span class="tech-chip"><i class="fa-brands fa-python text-purple"></i> Python</span>
+                        <span class="tech-chip"><i class="fa-solid fa-bolt text-cyan"></i> FastAPI</span>
+                        <span class="tech-chip"><i class="fa-solid fa-robot text-pink"></i> AI / LLM APIs</span>
+                        <span class="tech-chip"><i class="fa-brands fa-telegram text-blue"></i> Telegram (aiogram)</span>
+                        <span class="tech-chip"><i class="fa-solid fa-database text-teal"></i> PostgreSQL</span>
+                        <span class="tech-chip"><i class="fa-brands fa-docker text-blue"></i> Docker</span>
+                    </div>
 
-    viewer.onerror = () => {
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("fallback").style.display = "block";
-    };
+                    <!-- Call To Action Buttons -->
+                    <div class="hero-cta">
+                        <a href="#projects" class="btn btn-primary" data-key="btn_work">
+                            <i class="fa-solid fa-layer-group"></i> <span data-key="btn_work_text">View Projects</span>
+                        </a>
+                        <a href="#contact" class="btn btn-secondary" data-key="btn_contact">
+                            <i class="fa-solid fa-paper-plane"></i> <span data-key="btn_contact_text">Hire Me</span>
+                        </a>
+                        <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                            class="btn btn-outline" data-key="btn_github">
+                            <i class="fa-brands fa-github"></i> <span>GitHub</span>
+                        </a>
+                        <a href="Иномжонов_Наимжон_резюме.docx" download class="btn btn-ghost" data-key="btn_cv">
+                            <i class="fa-solid fa-file-arrow-down"></i> <span data-key="btn_cv_text">CV</span>
+                        </a>
+                    </div>
 
-    function zoomIn() {
-        scale += 0.2;
-        viewer.style.transform = `scale(${scale})`;
-        viewer.style.transformOrigin = "top center";
-    }
+                    <!-- Hero Social Links -->
+                    <div class="hero-socials">
+                        <a href="https://t.me/Naimjon_Inomjonov" target="_blank" rel="noopener noreferrer"
+                            class="social-icon" aria-label="Telegram" title="Telegram: @Naimjon_Inomjonov">
+                            <i class="fa-brands fa-telegram"></i>
+                        </a>
+                        <a href="mailto:naiminomjonov@gmail.com" class="social-icon" aria-label="Email"
+                            title="Email: naiminomjonov@gmail.com">
+                            <i class="fa-solid fa-envelope"></i>
+                        </a>
+                        <a href="tel:+998998370823" class="social-icon" aria-label="Phone"
+                            title="Phone: +998 (99) 837-08-23">
+                            <i class="fa-solid fa-phone"></i>
+                        </a>
+                        <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                            class="social-icon" aria-label="GitHub" title="GitHub: @Inomjonoff">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
+                    </div>
+                </div>
 
-    function zoomOut() {
-        if (scale > 0.4) {
-            scale -= 0.2;
-            viewer.style.transform = `scale(${scale})`;
-            viewer.style.transformOrigin = "top center";
-        }
-    }
+                <!-- Hero Visual Card -->
+                <div class="hero-image-wrapper">
+                    <div class="profile-card-glow"></div>
+                    <div class="profile-card">
+                        <div class="card-border"></div>
+                        <div class="profile-img-box">
+                            <img src="assets/profile.png" alt="Naimjon Inomjonov" class="profile-img">
+                        </div>
 
-    function fullscreen() {
-        if (viewer.requestFullscreen) viewer.requestFullscreen();
-    }
-</script>
+                        <div class="profile-terminal-info">
+                            <div class="terminal-bar">
+                                <span class="term-dot red"></span>
+                                <span class="term-dot yellow"></span>
+                                <span class="term-dot green"></span>
+                                <span class="term-title">naimjon@backend-box:~</span>
+                            </div>
+                            <div class="terminal-body">
+                                <p class="term-line"><span class="term-prompt">$</span> <span
+                                        class="term-cmd">python3 -m naimjon.status</span></p>
+                                <p class="term-output text-cyan">➔ Role: Python Backend & AI Developer</p>
+                                <p class="term-output text-purple">➔ Focus: AI Apps · Automation · APIs</p>
+                                <p class="term-output text-green">➔ Status: Ready to build & collaborate ✓</p>
+                            </div>
+                        </div>
 
+                        <div class="profile-status">
+                            <span class="status-indicator"></span>
+                            <span data-key="profile_status">Building AI & Backend Systems</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Real Impact Metrics Bar (New) -->
+        <section class="metrics-section" id="metrics">
+            <div class="container">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon text-purple"><i class="fa-solid fa-calendar-check"></i></div>
+                        <div class="metric-number">6+</div>
+                        <div class="metric-label" data-key="metric_years">Years IT Background</div>
+                        <div class="metric-desc" data-key="metric_years_desc">Support, systems & programming</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon text-cyan"><i class="fa-solid fa-code-fork"></i></div>
+                        <div class="metric-number">5+</div>
+                        <div class="metric-label" data-key="metric_projects">Core Projects</div>
+                        <div class="metric-desc" data-key="metric_projects_desc">EduAI, Pozitron, Mixaro & Bots</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon text-pink"><i class="fa-solid fa-plug-circle-bolt"></i></div>
+                        <div class="metric-number">20+</div>
+                        <div class="metric-label" data-key="metric_integrations">API Integrations</div>
+                        <div class="metric-desc" data-key="metric_integrations_desc">LLMs, Telegram TMA, Payments</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon text-teal"><i class="fa-solid fa-brain"></i></div>
+                        <div class="metric-number">3+</div>
+                        <div class="metric-label" data-key="metric_ai">AI Platforms</div>
+                        <div class="metric-desc" data-key="metric_ai_desc">Grading, mentors & smart automation</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section (Crisp & Strategic) -->
+        <section class="about-section section-padding" id="about">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title gradient-text" data-key="about_title">About Me</h2>
+                    <p class="section-subtitle" data-key="about_subtitle">Turning real-world problems into practical
+                        digital products</p>
+                </div>
+
+                <div class="grid grid-2 about-grid">
+                    <div class="about-text">
+                        <h3 class="about-subheading" data-key="about_subheading">Systemic Mindset: Architecture Over
+                            Isolated Code</h3>
+                        <p class="paragraph" data-key="about_p1">
+                            I am a developer focused on Python backend development, AI integrations, and business
+                            automation. I don't just write individual scripts; I build cohesive systems where APIs,
+                            databases, Telegram bots, and modern web applications seamlessly communicate to solve real
+                            operational challenges.
+                        </p>
+                        <p class="paragraph" data-key="about_p2">
+                            Alongside my corporate experience in software support and system coordination, I actively
+                            design and scale independent platforms like <strong>EduAI</strong> (AI education &
+                            assessment), <strong>Pozitron Academy</strong> (spaced-repetition language community), and
+                            <strong>Mixaro Shop</strong> (automated dropshipping e-commerce).
+                        </p>
+
+                        <div class="about-meta-pills">
+                            <div class="meta-pill">
+                                <i class="fa-solid fa-location-dot text-cyan"></i>
+                                <span><strong>Location:</strong> Uzbekistan (Available for Remote & Relocation to
+                                    Tashkent/Chirchik)</span>
+                            </div>
+                            <div class="meta-pill">
+                                <i class="fa-solid fa-language text-purple"></i>
+                                <span><strong>Languages:</strong> Uzbek (Native), Russian (B2), English (B2), Tajik
+                                    (Native)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-pillars grid grid-2">
+                        <div class="pillar-card">
+                            <div class="pillar-icon bg-purple-glow"><i class="fa-solid fa-cubes-stacked"></i></div>
+                            <h4 data-key="pil1_title">Systemic Architecture</h4>
+                            <p data-key="pil1_desc">Designing end-to-end flows: databases, asynchronous queues, API
+                                microservices, and client interfaces.</p>
+                        </div>
+                        <div class="pillar-card">
+                            <div class="pillar-icon bg-cyan-glow"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                            <h4 data-key="pil2_title">AI Integration</h4>
+                            <p data-key="pil2_desc">Integrating LLMs (OpenAI, Gemini, Ollama) for practical tasks like
+                                grading, contextual mentors, and smart parsing.</p>
+                        </div>
+                        <div class="pillar-card">
+                            <div class="pillar-icon bg-pink-glow"><i class="fa-solid fa-gears"></i></div>
+                            <h4 data-key="pil3_title">Business Automation</h4>
+                            <p data-key="pil3_desc">Automating tedious operations: Telegram bots, sales dispatching,
+                                reporting pipelines, and customer workflows.</p>
+                        </div>
+                        <div class="pillar-card">
+                            <div class="pillar-icon bg-blue-glow"><i class="fa-solid fa-rocket"></i></div>
+                            <h4 data-key="pil4_title">Product Mindset</h4>
+                            <p data-key="pil4_desc">Treating code as a business asset — prioritizing UX, reliability,
+                                security, and speed of delivery.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- What I Can Build / Services Section (New) -->
+        <section class="services-section section-padding" id="services">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title gradient-text" data-key="services_title">What I Can Build</h2>
+                    <p class="section-subtitle" data-key="services_subtitle">Specialized engineering services to power
+                        your business and digital products</p>
+                </div>
+
+                <div class="services-grid grid grid-3">
+                    <!-- Service 1 -->
+                    <div class="service-card">
+                        <div class="service-icon-wrapper bg-purple-glow">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <h3 class="service-title" data-key="serv1_title">AI Automation & LLMs</h3>
+                        <p class="service-desc" data-key="serv1_desc">
+                            Automate complex workflows with LLM APIs (OpenAI, Gemini, Anthropic, Ollama). Custom AI
+                            agents, automated grading systems, intelligent document parsing, and RAG knowledge engines.
+                        </p>
+                        <ul class="service-points">
+                            <li><i class="fa-solid fa-check text-cyan"></i> Prompt Engineering & Evaluation</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> Smart Chatbots & Virtual Mentors</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> Contextual Data Extraction</li>
+                        </ul>
+                    </div>
+
+                    <!-- Service 2 -->
+                    <div class="service-card">
+                        <div class="service-icon-wrapper bg-cyan-glow">
+                            <i class="fa-solid fa-server"></i>
+                        </div>
+                        <h3 class="service-title" data-key="serv2_title">Backend Systems & REST APIs</h3>
+                        <p class="service-desc" data-key="serv2_desc">
+                            Robust server-side architecture built with Python (FastAPI / Flask). Secure authentication,
+                            database schemas, asynchronous tasks, and high-throughput RESTful endpoints.
+                        </p>
+                        <ul class="service-points">
+                            <li><i class="fa-solid fa-check text-cyan"></i> FastAPI / Flask REST APIs</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> PostgreSQL, Redis & SQLAlchemy</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> Docker Containerization & JWT Auth</li>
+                        </ul>
+                    </div>
+
+                    <!-- Service 3 -->
+                    <div class="service-card">
+                        <div class="service-icon-wrapper bg-blue-glow">
+                            <i class="fa-brands fa-telegram"></i>
+                        </div>
+                        <h3 class="service-title" data-key="serv3_title">Telegram Bots & Mini Apps</h3>
+                        <p class="service-desc" data-key="serv3_desc">
+                            High-performance Telegram bots (aiogram 3.x) and interactive Telegram Mini Apps (TMA) for
+                            e-commerce, automated ordering, payment gateways, and community management.
+                        </p>
+                        <ul class="service-points">
+                            <li><i class="fa-solid fa-check text-cyan"></i> Telegram Mini Apps (WebApp SDK)</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> Payment & Order Dispatch Workflows</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> Multi-tier Admin Dashboards</li>
+                        </ul>
+                    </div>
+
+                    <!-- Service 4 -->
+                    <div class="service-card">
+                        <div class="service-icon-wrapper bg-pink-glow">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3 class="service-title" data-key="serv4_title">Business Analytics & Automation</h3>
+                        <p class="service-desc" data-key="serv4_desc">
+                            Automate sales pipelines, recurring reports, data extraction, and CRM synchronization to
+                            eliminate repetitive manual work and give management clear visibility.
+                        </p>
+                        <ul class="service-points">
+                            <li><i class="fa-solid fa-check text-cyan"></i> Automated PDF/Excel Reports</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> Data Ingestion & Transformation</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> Lead Tracking & Notifications</li>
+                        </ul>
+                    </div>
+
+                    <!-- Service 5 -->
+                    <div class="service-card">
+                        <div class="service-icon-wrapper bg-teal-glow">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <h3 class="service-title" data-key="serv5_title">Web Applications & PWAs</h3>
+                        <p class="service-desc" data-key="serv5_desc">
+                            Responsive full-stack web applications and offline-ready Progressive Web Apps (PWAs) with
+                            modern UI, optimized loading speeds, and robust API integration.
+                        </p>
+                        <ul class="service-points">
+                            <li><i class="fa-solid fa-check text-cyan"></i> Mobile-first Responsive UI</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> Progressive Web App (PWA) Offline</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> Client Dashboard Portals</li>
+                        </ul>
+                    </div>
+
+                    <!-- Service 6 / Action Card -->
+                    <div class="service-card service-cta-card">
+                        <div class="service-cta-inner">
+                            <span class="cta-badge" data-key="serv_cta_badge"><i
+                                    class="fa-solid fa-lightbulb"></i> Custom Solutions</span>
+                            <h3 class="service-title" data-key="serv_cta_title">Have an idea? Let's build it.</h3>
+                            <p class="service-desc" data-key="serv_cta_desc">
+                                From concept to architecture, backend development, and AI integration — let's turn your
+                                project into a working reality.
+                            </p>
+                            <a href="#contact" class="btn btn-primary btn-block" data-key="serv_cta_btn">
+                                <span>Get in Touch</span> <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Projects Section (50% Power of Portfolio) -->
+        <section class="projects-section section-padding" id="projects">
+            <div class="container">
+                <div class="section-header text-center">
+                    <div class="section-pill" data-key="proj_section_pill"><i class="fa-solid fa-star text-purple"></i>
+                        Flagship Engineering</div>
+                    <h2 class="section-title gradient-text" data-key="proj_title">Featured Projects</h2>
+                    <p class="section-subtitle" data-key="proj_subtitle">Real-world applications built with Python, AI,
+                        Telegram, and modern backend systems</p>
+                </div>
+
+                <!-- Project Filters -->
+                <div class="project-filters">
+                    <button class="filter-btn active" data-filter="all" data-key="filter_all">All Projects</button>
+                    <button class="filter-btn" data-filter="ai" data-key="filter_ai">AI & Backend</button>
+                    <button class="filter-btn" data-filter="telegram" data-key="filter_telegram">Telegram &
+                        E-Commerce</button>
+                    <button class="filter-btn" data-filter="mobile" data-key="filter_mobile">Mobile & Tools</button>
+                </div>
+
+                <div class="flagship-projects-grid">
+                    <!-- Project 1: EduAI (Flagship 1) -->
+                    <div class="project-card-featured" data-category="ai">
+                        <div class="project-card-inner">
+                            <div class="project-card-header">
+                                <div class="project-identity">
+                                    <div class="project-icon bg-purple-glow"><i class="fa-solid fa-graduation-cap"></i>
+                                    </div>
+                                    <div>
+                                        <div class="project-rank-tag">🥇 Flagship 01</div>
+                                        <h3 class="project-main-title">EduAI</h3>
+                                        <p class="project-headline" data-key="eduai_headline">AI-Powered Interactive
+                                            Education Platform</p>
+                                    </div>
+                                </div>
+                                <div class="project-status-box">
+                                    <span class="status-badge status-active">
+                                        <span class="status-dot dot-active"></span>
+                                        <span data-key="status_active_dev">Active Development</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="project-problem-solution">
+                                <div class="ps-block problem">
+                                    <span class="ps-label text-pink"><i
+                                            class="fa-solid fa-triangle-exclamation"></i> Problem:</span>
+                                    <p data-key="eduai_problem">Teachers spend extensive hours manually generating and
+                                        grading homework; students lack 24/7 personalized explanations and interactive
+                                        practice.</p>
+                                </div>
+                                <div class="ps-block solution">
+                                    <span class="ps-label text-cyan"><i class="fa-solid fa-circle-check"></i>
+                                        Solution:</span>
+                                    <p data-key="eduai_solution">An AI-powered PWA with dedicated teacher/student
+                                        dashboards, interactive assignments, contextual AI mentor, and automated
+                                        assessment engine.</p>
+                                </div>
+                            </div>
+
+                            <div class="project-features-list">
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> AI Mentor
+                                    Chat</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Automated
+                                    Grading</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Teacher & Student
+                                    Dashboards</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Interactive
+                                    Tests</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Learning
+                                    Analytics</span>
+                            </div>
+
+                            <div class="project-tech-stack">
+                                <span class="tech-badge">Python</span>
+                                <span class="tech-badge">FastAPI</span>
+                                <span class="tech-badge">LLM APIs</span>
+                                <span class="tech-badge">PostgreSQL</span>
+                                <span class="tech-badge">PWA</span>
+                                <span class="tech-badge">Docker</span>
+                            </div>
+
+                            <div class="project-card-actions">
+                                <button class="btn btn-primary btn-sm open-case-study" data-project="eduai">
+                                    <i class="fa-solid fa-book-open"></i> <span data-key="btn_case_study">Case
+                                        Study</span>
+                                </button>
+                                <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                                    class="btn btn-outline btn-sm">
+                                    <i class="fa-brands fa-github"></i> <span>GitHub Repo</span>
+                                </a>
+                                <a href="#contact" class="btn btn-ghost btn-sm">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span
+                                        data-key="btn_demo">Live Demo / Request</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2: Pozitron Academy (Flagship 2) -->
+                    <div class="project-card-featured" data-category="ai">
+                        <div class="project-card-inner">
+                            <div class="project-card-header">
+                                <div class="project-identity">
+                                    <div class="project-icon bg-cyan-glow"><i class="fa-solid fa-brain"></i></div>
+                                    <div>
+                                        <div class="project-rank-tag">🥈 Flagship 02</div>
+                                        <h3 class="project-main-title">Pozitron Academy</h3>
+                                        <p class="project-headline" data-key="pozitron_headline">Language Learning &
+                                            Spaced Repetition Platform</p>
+                                    </div>
+                                </div>
+                                <div class="project-status-box">
+                                    <span class="status-badge status-in-dev">
+                                        <span class="status-dot dot-in-dev"></span>
+                                        <span data-key="status_in_dev">In Development</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="project-problem-solution">
+                                <div class="ps-block problem">
+                                    <span class="ps-label text-pink"><i
+                                            class="fa-solid fa-triangle-exclamation"></i> Problem:</span>
+                                    <p data-key="pozitron_problem">Language learners struggle with vocabulary retention,
+                                        lack structured habit loops, and need accessible peer-to-peer practice without
+                                        paywalls.</p>
+                                </div>
+                                <div class="ps-block solution">
+                                    <span class="ps-label text-cyan"><i class="fa-solid fa-circle-check"></i>
+                                        Solution:</span>
+                                    <p data-key="pozitron_solution">An open learning platform combining SuperMemo-2
+                                        spaced repetition, interactive books with instant dictionary, gamified levels,
+                                        and Telegram bot integration.</p>
+                                </div>
+                            </div>
+
+                            <div class="project-features-list">
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> SuperMemo-2
+                                    Flashcards</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Interactive Book
+                                    Reader</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Gamification
+                                    Ranks & Streaks</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Telegram
+                                    Community Bot</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Offline-ready
+                                    PWA</span>
+                            </div>
+
+                            <div class="project-tech-stack">
+                                <span class="tech-badge">Python</span>
+                                <span class="tech-badge">FastAPI</span>
+                                <span class="tech-badge">Telegram Bot</span>
+                                <span class="tech-badge">PostgreSQL</span>
+                                <span class="tech-badge">PWA</span>
+                                <span class="tech-badge">TTS Audio</span>
+                            </div>
+
+                            <div class="project-card-actions">
+                                <button class="btn btn-primary btn-sm open-case-study" data-project="pozitron">
+                                    <i class="fa-solid fa-book-open"></i> <span data-key="btn_case_study">Case
+                                        Study</span>
+                                </button>
+                                <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                                    class="btn btn-outline btn-sm">
+                                    <i class="fa-brands fa-github"></i> <span>GitHub Repo</span>
+                                </a>
+                                <a href="#contact" class="btn btn-ghost btn-sm">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span
+                                        data-key="btn_demo">Live Demo / Request</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3: Mixaro Shop (Flagship 3) -->
+                    <div class="project-card-featured" data-category="telegram">
+                        <div class="project-card-inner">
+                            <div class="project-card-header">
+                                <div class="project-identity">
+                                    <div class="project-icon bg-blue-glow"><i class="fa-solid fa-cart-shopping"></i>
+                                    </div>
+                                    <div>
+                                        <div class="project-rank-tag">🥉 Flagship 03</div>
+                                        <h3 class="project-main-title">Mixaro Shop</h3>
+                                        <p class="project-headline" data-key="mixaro_headline">Telegram + Web E-Commerce
+                                            Dropshipping Platform</p>
+                                    </div>
+                                </div>
+                                <div class="project-status-box">
+                                    <span class="status-badge status-in-dev">
+                                        <span class="status-dot dot-in-dev"></span>
+                                        <span data-key="status_in_dev">In Development</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="project-problem-solution">
+                                <div class="ps-block problem">
+                                    <span class="ps-label text-pink"><i
+                                            class="fa-solid fa-triangle-exclamation"></i> Problem:</span>
+                                    <p data-key="mixaro_problem">Managing China-to-Uzbekistan dropshipping via manual
+                                        spreadsheets and direct messaging leads to missed orders and payment
+                                        bottlenecks.</p>
+                                </div>
+                                <div class="ps-block solution">
+                                    <span class="ps-label text-cyan"><i class="fa-solid fa-circle-check"></i>
+                                        Solution:</span>
+                                    <p data-key="mixaro_solution">An automated commerce ecosystem with an aiogram 3.x
+                                        Telegram bot, interactive Telegram Mini App catalogue, automated order
+                                        dispatch, and admin analytics.</p>
+                                </div>
+                            </div>
+
+                            <div class="project-features-list">
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Telegram Mini App
+                                    Cart</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Automated Order
+                                    Pipeline</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Multi-tier Admin
+                                    Panel</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Sales & Stock
+                                    Analytics</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> P2P & Payment
+                                    Integration</span>
+                            </div>
+
+                            <div class="project-tech-stack">
+                                <span class="tech-badge">Python</span>
+                                <span class="tech-badge">aiogram 3.x</span>
+                                <span class="tech-badge">PostgreSQL</span>
+                                <span class="tech-badge">Redis</span>
+                                <span class="tech-badge">Telegram Mini App</span>
+                                <span class="tech-badge">Docker</span>
+                            </div>
+
+                            <div class="project-card-actions">
+                                <button class="btn btn-primary btn-sm open-case-study" data-project="mixaro">
+                                    <i class="fa-solid fa-book-open"></i> <span data-key="btn_case_study">Case
+                                        Study</span>
+                                </button>
+                                <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                                    class="btn btn-outline btn-sm">
+                                    <i class="fa-brands fa-github"></i> <span>GitHub Repo</span>
+                                </a>
+                                <a href="#contact" class="btn btn-ghost btn-sm">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i> <span
+                                        data-key="btn_demo">Live Demo / Request</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 4: AI Automation Platform (Flagship 4) -->
+                    <div class="project-card-featured" data-category="ai">
+                        <div class="project-card-inner">
+                            <div class="project-card-header">
+                                <div class="project-identity">
+                                    <div class="project-icon bg-pink-glow"><i class="fa-solid fa-network-wired"></i>
+                                    </div>
+                                    <div>
+                                        <div class="project-rank-tag">4️⃣ Flagship 04</div>
+                                        <h3 class="project-main-title">AI Automation System</h3>
+                                        <p class="project-headline" data-key="auto_headline">Intelligent Business
+                                            Workflow & Lead Automation</p>
+                                    </div>
+                                </div>
+                                <div class="project-status-box">
+                                    <span class="status-badge status-active">
+                                        <span class="status-dot dot-active"></span>
+                                        <span data-key="status_active_dev">Active Development</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="project-problem-solution">
+                                <div class="ps-block problem">
+                                    <span class="ps-label text-pink"><i
+                                            class="fa-solid fa-triangle-exclamation"></i> Problem:</span>
+                                    <p data-key="auto_problem">Companies lose inbound leads due to slow response times
+                                        and waste hours on repetitive manual inquiries and manual reporting.</p>
+                                </div>
+                                <div class="ps-block solution">
+                                    <span class="ps-label text-cyan"><i class="fa-solid fa-circle-check"></i>
+                                        Solution:</span>
+                                    <p data-key="auto_solution">Automated lead intake bot integrated with LLM APIs for
+                                        instant qualification, multi-channel notifications, and automated executive
+                                        reports.</p>
+                                </div>
+                            </div>
+
+                            <div class="project-features-list">
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> 24/7 AI Lead
+                                    Qualification</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Multi-channel
+                                    Alerts</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Automated
+                                    Executive Reports</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> CRM & Database
+                                    Sync</span>
+                            </div>
+
+                            <div class="project-tech-stack">
+                                <span class="tech-badge">Python</span>
+                                <span class="tech-badge">aiogram 3.x</span>
+                                <span class="tech-badge">OpenAI / Gemini</span>
+                                <span class="tech-badge">PostgreSQL</span>
+                                <span class="tech-badge">AsyncIO</span>
+                            </div>
+
+                            <div class="project-card-actions">
+                                <button class="btn btn-primary btn-sm open-case-study" data-project="automation">
+                                    <i class="fa-solid fa-book-open"></i> <span data-key="btn_case_study">Case
+                                        Study</span>
+                                </button>
+                                <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                                    class="btn btn-outline btn-sm">
+                                    <i class="fa-brands fa-github"></i> <span>GitHub Repo</span>
+                                </a>
+                                <a href="#contact" class="btn btn-ghost btn-sm">
+                                    <i class="fa-solid fa-paper-plane"></i> <span data-key="btn_hire">Hire for
+                                        This</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 5: Thematic Synonym Dictionary (Flagship 5) -->
+                    <div class="project-card-featured" data-category="mobile">
+                        <div class="project-card-inner">
+                            <div class="project-card-header">
+                                <div class="project-identity">
+                                    <div class="project-icon bg-teal-glow"><i class="fa-solid fa-book-bookmark"></i>
+                                    </div>
+                                    <div>
+                                        <div class="project-rank-tag">5️⃣ Flagship 05</div>
+                                        <h3 class="project-main-title">Thematic Synonym Dictionary</h3>
+                                        <p class="project-headline" data-key="dict_headline">Android Application &
+                                            Linguistic Search</p>
+                                    </div>
+                                </div>
+                                <div class="project-status-box">
+                                    <span class="status-badge status-live">
+                                        <span class="status-dot dot-live"></span>
+                                        <span data-key="status_live">Live / Maintained</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="project-problem-solution">
+                                <div class="ps-block problem">
+                                    <span class="ps-label text-pink"><i
+                                            class="fa-solid fa-triangle-exclamation"></i> Problem:</span>
+                                    <p data-key="dict_problem">Linguists and students lacked a structured, offline
+                                        thematic synonym reference tool categorized by context rather than just
+                                        alphabetical order.</p>
+                                </div>
+                                <div class="ps-block solution">
+                                    <span class="ps-label text-cyan"><i class="fa-solid fa-circle-check"></i>
+                                        Solution:</span>
+                                    <p data-key="dict_solution">An offline-capable Android application featuring
+                                        thematic lexical groups, sub-grouping, fast indexed search, and custom
+                                        bookmarks.</p>
+                                </div>
+                            </div>
+
+                            <div class="project-features-list">
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Fast Offline
+                                    Search</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Thematic
+                                    Lexical Groups</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Bookmark & Notes
+                                    System</span>
+                                <span class="feature-tag"><i class="fa-solid fa-check text-cyan"></i> Material Design
+                                    UI</span>
+                            </div>
+
+                            <div class="project-tech-stack">
+                                <span class="tech-badge">Android</span>
+                                <span class="tech-badge">Java</span>
+                                <span class="tech-badge">Kotlin</span>
+                                <span class="tech-badge">SQLite</span>
+                                <span class="tech-badge">Material UI</span>
+                            </div>
+
+                            <div class="project-card-actions">
+                                <button class="btn btn-primary btn-sm open-case-study" data-project="dictionary">
+                                    <i class="fa-solid fa-book-open"></i> <span data-key="btn_case_study">Case
+                                        Study</span>
+                                </button>
+                                <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                                    class="btn btn-outline btn-sm">
+                                    <i class="fa-brands fa-github"></i> <span>GitHub Repo</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack & Arsenal (Domain Categorized) -->
+        <section class="skills-section section-padding" id="skills">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title gradient-text" data-key="skills_title">Tech Stack & Engineering Arsenal
+                    </h2>
+                    <p class="section-subtitle" data-key="skills_subtitle">Production-tested technologies, frameworks,
+                        and architectures</p>
+                </div>
+
+                <div class="skills-container grid grid-3">
+                    <!-- 1. Backend & APIs -->
+                    <div class="skill-category-card">
+                        <div class="category-header">
+                            <span class="category-icon bg-purple-glow"><i class="fa-solid fa-server"></i></span>
+                            <h3 class="category-title" data-key="cat_backend">Backend & APIs</h3>
+                        </div>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">FastAPI</span>
+                            <span class="skill-tag">Flask</span>
+                            <span class="skill-tag">RESTful APIs</span>
+                            <span class="skill-tag">AsyncIO</span>
+                            <span class="skill-tag">JWT & Auth</span>
+                            <span class="skill-tag">SQLAlchemy</span>
+                        </div>
+                    </div>
+
+                    <!-- 2. AI & LLM Systems -->
+                    <div class="skill-category-card">
+                        <div class="category-header">
+                            <span class="category-icon bg-cyan-glow"><i class="fa-solid fa-brain"></i></span>
+                            <h3 class="category-title" data-key="cat_ai">AI & LLMs</h3>
+                        </div>
+                        <div class="skill-tags">
+                            <span class="skill-tag">OpenAI API</span>
+                            <span class="skill-tag">Google Gemini</span>
+                            <span class="skill-tag">Anthropic Claude</span>
+                            <span class="skill-tag">Ollama</span>
+                            <span class="skill-tag">Prompt Engineering</span>
+                            <span class="skill-tag">AI Mentors</span>
+                            <span class="skill-tag">Automated Grading</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. Databases & Cache -->
+                    <div class="skill-category-card">
+                        <div class="category-header">
+                            <span class="category-icon bg-blue-glow"><i class="fa-solid fa-database"></i></span>
+                            <h3 class="category-title" data-key="cat_db">Databases & Cache</h3>
+                        </div>
+                        <div class="skill-tags">
+                            <span class="skill-tag">PostgreSQL</span>
+                            <span class="skill-tag">Redis</span>
+                            <span class="skill-tag">MySQL</span>
+                            <span class="skill-tag">SQLite</span>
+                            <span class="skill-tag">Firebase</span>
+                            <span class="skill-tag">Schema Design</span>
+                        </div>
+                    </div>
+
+                    <!-- 4. Telegram Ecosystem -->
+                    <div class="skill-category-card">
+                        <div class="category-header">
+                            <span class="category-icon bg-blue-glow"><i class="fa-brands fa-telegram"></i></span>
+                            <h3 class="category-title" data-key="cat_telegram">Telegram Ecosystem</h3>
+                        </div>
+                        <div class="skill-tags">
+                            <span class="skill-tag">aiogram 3.x</span>
+                            <span class="skill-tag">Telegram Mini Apps (TMA)</span>
+                            <span class="skill-tag">Telegram Bot API</span>
+                            <span class="skill-tag">Webhooks</span>
+                            <span class="skill-tag">Payment Integration</span>
+                        </div>
+                    </div>
+
+                    <!-- 5. DevOps & Cloud -->
+                    <div class="skill-category-card">
+                        <div class="category-header">
+                            <span class="category-icon bg-pink-glow"><i class="fa-solid fa-cubes"></i></span>
+                            <h3 class="category-title" data-key="cat_devops">DevOps & Systems</h3>
+                        </div>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Docker</span>
+                            <span class="skill-tag">Docker Compose</span>
+                            <span class="skill-tag">Linux / Bash</span>
+                            <span class="skill-tag">Git & GitHub</span>
+                            <span class="skill-tag">Vercel</span>
+                            <span class="skill-tag">SSH / Termius</span>
+                        </div>
+                    </div>
+
+                    <!-- 6. Frontend & Mobile -->
+                    <div class="skill-category-card">
+                        <div class="category-header">
+                            <span class="category-icon bg-teal-glow"><i class="fa-solid fa-mobile-screen"></i></span>
+                            <h3 class="category-title" data-key="cat_frontend">Frontend & Mobile</h3>
+                        </div>
+                        <div class="skill-tags">
+                            <span class="skill-tag">HTML5 / CSS3</span>
+                            <span class="skill-tag">Modern JavaScript</span>
+                            <span class="skill-tag">Progressive Web Apps (PWA)</span>
+                            <span class="skill-tag">Android (Java/Kotlin)</span>
+                            <span class="skill-tag">Responsive UI</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Languages Fluency -->
+                <div class="languages-bar-container">
+                    <h3 class="languages-title text-center" data-key="lang_skills_title"><i
+                            class="fa-solid fa-language"></i> Languages Fluency</h3>
+                    <div class="languages-grid">
+                        <div class="lang-progress">
+                            <div class="lang-info">
+                                <span class="lang-name" data-key="lang_uz">Uzbek</span>
+                                <span class="lang-percent">Native (C2)</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="lang-progress">
+                            <div class="lang-info">
+                                <span class="lang-name" data-key="lang_tg">Tajik</span>
+                                <span class="lang-percent">Native</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="lang-progress">
+                            <div class="lang-info">
+                                <span class="lang-name" data-key="lang_ru">Russian</span>
+                                <span class="lang-percent">Professional (B2)</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="lang-progress">
+                            <div class="lang-info">
+                                <span class="lang-name" data-key="lang_en">English</span>
+                                <span class="lang-percent">Professional / Tech (B2)</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GitHub & Open Source Activity Section (New) -->
+        <section class="github-section section-padding" id="github">
+            <div class="container">
+                <div class="section-header text-center">
+                    <div class="section-pill" data-key="github_pill"><i class="fa-brands fa-github text-purple"></i>
+                        Open Source & Repositories</div>
+                    <h2 class="section-title gradient-text" data-key="github_title">GitHub & Code Activity</h2>
+                    <p class="section-subtitle" data-key="github_subtitle">Explore my active repositories, code
+                        architecture, and contributions</p>
+                </div>
+
+                <div class="github-card">
+                    <div class="github-profile-bar">
+                        <div class="github-user">
+                            <i class="fa-brands fa-github text-purple github-big-icon"></i>
+                            <div>
+                                <h3 class="github-handle">@Inomjonoff</h3>
+                                <p class="github-bio">Python Backend & AI Developer · Systems Builder</p>
+                            </div>
+                        </div>
+                        <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                            class="btn btn-outline btn-sm">
+                            <span>Visit Profile</span> <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+
+                    <div class="github-stats-grid">
+                        <div class="github-stat-item">
+                            <img src="https://github-readme-stats-eight-theta.vercel.app/api?username=Inomjonoff&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=00f2fe&icon_color=a855f7&text_color=94a3b8"
+                                alt="Naimjon GitHub Stats" loading="lazy">
+                        </div>
+                        <div class="github-stat-item">
+                            <img src="https://streak-stats.demolab.com/?user=Inomjonoff&theme=tokyonight&hide_border=true&background=0d1117&ring=a855f7&fire=00f2fe&currStreakLabel=00f2fe"
+                                alt="Naimjon GitHub Streak" loading="lazy">
+                        </div>
+                    </div>
+
+                    <div class="github-pinned-repos">
+                        <h4 class="pinned-title" data-key="pinned_title"><i class="fa-solid fa-code-commit"></i> Key
+                            Repositories</h4>
+                        <div class="repos-grid grid grid-3">
+                            <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                                class="repo-card">
+                                <div class="repo-name"><i class="fa-solid fa-book-bookmark text-cyan"></i> EduAI</div>
+                                <p class="repo-desc">AI-powered educational platform with FastAPI, LLM grading & PWA.
+                                </p>
+                                <div class="repo-meta">
+                                    <span><i class="fa-solid fa-circle text-purple"></i> Python</span>
+                                    <span><i class="fa-solid fa-star"></i> Featured</span>
+                                </div>
+                            </a>
+                            <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                                class="repo-card">
+                                <div class="repo-name"><i class="fa-solid fa-book-bookmark text-cyan"></i>
+                                    Pozitron-Academy</div>
+                                <p class="repo-desc">Language learning platform with SuperMemo-2 spaced repetition.</p>
+                                <div class="repo-meta">
+                                    <span><i class="fa-solid fa-circle text-cyan"></i> Python / PWA</span>
+                                    <span><i class="fa-solid fa-star"></i> Featured</span>
+                                </div>
+                            </a>
+                            <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                                class="repo-card">
+                                <div class="repo-name"><i class="fa-solid fa-book-bookmark text-cyan"></i> Mixaro-Shop
+                                </div>
+                                <p class="repo-desc">Telegram Mini App & aiogram 3.x automated e-commerce backend.</p>
+                                <div class="repo-meta">
+                                    <span><i class="fa-solid fa-circle text-blue"></i> aiogram / TMA</span>
+                                    <span><i class="fa-solid fa-star"></i> Featured</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Curated Experience Section -->
+        <section class="experience-section section-padding" id="experience">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title gradient-text" data-key="exp_title">Professional Experience & Background
+                    </h2>
+                    <p class="section-subtitle" data-key="exp_subtitle">My technical career journey and enterprise
+                        support foundations</p>
+                </div>
+
+                <div class="timeline-container">
+                    <div class="timeline">
+                        <!-- Unicon Soft -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-date" data-key="job1_date">Jan 2026 — Present</div>
+                            <div class="timeline-content">
+                                <div class="job-header">
+                                    <h3 class="job-title" data-key="job1_title">IT Support Specialist</h3>
+                                    <span class="job-company">Unicon Soft (Bostanlyk Branch, Tashkent Region)</span>
+                                </div>
+                                <p class="job-desc" data-key="job1_desc">
+                                    Providing technical support and troubleshooting software infrastructure for system
+                                    integration and business automation products in government and enterprise sectors.
+                                </p>
+                                <div class="job-tags">
+                                    <span>Software Support</span>
+                                    <span>System Integration</span>
+                                    <span>Infrastructure</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ma'naviyat va ma'rifat -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-date" data-key="job2_date">Aug 2024 — Aug 2025</div>
+                            <div class="timeline-content">
+                                <div class="job-header">
+                                    <h3 class="job-title" data-key="job2_title">Lead Information & Systems Coordinator
+                                    </h3>
+                                    <span class="job-company">Republican Center "Ma'naviyat va ma'rifat"</span>
+                                </div>
+                                <p class="job-desc" data-key="job2_desc">
+                                    Planned, managed, and executed regional information campaigns, public outreach, and
+                                    cross-organizational data coordination. Analyzed campaign metrics and efficiency
+                                    reports.
+                                </p>
+                                <div class="job-tags">
+                                    <span>Data Analysis</span>
+                                    <span>Campaign Coordination</span>
+                                    <span>Management</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- School Informatics Teacher -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-date" data-key="job3_date">Sep 2023 — Aug 2024</div>
+                            <div class="timeline-content">
+                                <div class="job-header">
+                                    <h3 class="job-title" data-key="job3_title">Informatics & Algorithms Teacher</h3>
+                                    <span class="job-company">School No.42, Bostanlyk District</span>
+                                </div>
+                                <p class="job-desc" data-key="job3_desc">
+                                    Educated high school students on computer science fundamentals, algorithms, and
+                                    Python programming. Created learning curriculum and hands-on laboratory exercises.
+                                </p>
+                                <div class="job-tags">
+                                    <span>Python</span>
+                                    <span>Algorithms</span>
+                                    <span>Curriculum</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chamber of Commerce -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-date" data-key="job4_date">Mar 2023 — Jun 2023</div>
+                            <div class="timeline-content">
+                                <div class="job-header">
+                                    <h3 class="job-title" data-key="job4_title">Chief Specialist in External Economic
+                                        Affairs</h3>
+                                    <span class="job-company">Chamber of Commerce of Uzbekistan, Tashkent Region</span>
+                                </div>
+                                <p class="job-desc" data-key="job4_desc">
+                                    Consulted businesses on customs regulations, export-import operations, and performed
+                                    market analysis to connect local companies with international trade partners.
+                                </p>
+                                <div class="job-tags">
+                                    <span>Trade Analytics</span>
+                                    <span>Business Consulting</span>
+                                    <span>Reporting</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expand earlier background toggle -->
+                    <div class="earlier-exp-wrapper text-center">
+                        <button class="btn btn-outline btn-sm" id="toggle-earlier-exp">
+                            <span id="earlier-btn-text" data-key="btn_show_earlier">View Earlier Experience
+                                (2019-2023)</span>
+                            <i class="fa-solid fa-chevron-down" id="earlier-chevron"></i>
+                        </button>
+                    </div>
+
+                    <!-- Hidden earlier experience pane -->
+                    <div class="earlier-experience-pane" id="earlier-exp-pane" style="display: none;">
+                        <div class="timeline">
+                            <!-- Business support center -->
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-date" data-key="job5_date">Oct 2021 — Mar 2023</div>
+                                <div class="timeline-content">
+                                    <div class="job-header">
+                                        <h3 class="job-title" data-key="job5_title">Manager of Educational Programs
+                                        </h3>
+                                        <span class="job-company">"Tashkent viloyati tadbirkorlikka ko'maklashish
+                                            markazi"</span>
+                                    </div>
+                                    <p class="job-desc" data-key="job5_desc">Managed educational pathways and designed
+                                        training workshops for small-to-medium enterprise owners on commerce
+                                        digitizing.</p>
+                                </div>
+                            </div>
+
+                            <!-- Youth Agency -->
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-date" data-key="job6_date">Apr 2021 — Sep 2021</div>
+                                <div class="timeline-content">
+                                    <div class="job-header">
+                                        <h3 class="job-title" data-key="job6_title">Youth Affairs Assistant</h3>
+                                        <span class="job-company">Youth Affairs Agency, Tashkent Region</span>
+                                    </div>
+                                    <p class="job-desc" data-key="job6_desc">Organized local youth talent programs,
+                                        digital literacy events, and regional social initiatives.</p>
+                                </div>
+                            </div>
+
+                            <!-- School 47 -->
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-date" data-key="job8_date">Oct 2019 — Dec 2020</div>
+                                <div class="timeline-content">
+                                    <div class="job-header">
+                                        <h3 class="job-title" data-key="job8_title">Informatics Teacher & Secretary</h3>
+                                        <span class="job-company">School No.47, Bostanlyk District</span>
+                                    </div>
+                                    <p class="job-desc" data-key="job8_desc">Taught computing basics and coordinated
+                                        official documentation flow and administrative workflows.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education & Certifications -->
+        <section class="education-section section-padding" id="education">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title gradient-text" data-key="edu_title">Education & Certifications</h2>
+                    <p class="section-subtitle" data-key="edu_subtitle">Academic foundations and continuous software
+                        engineering qualifications</p>
+                </div>
+
+                <div class="grid grid-2 education-grid">
+                    <div class="education-card">
+                        <div class="edu-icon bg-purple-glow"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <span class="edu-date">2020 - 2024</span>
+                        <h3 class="edu-degree" data-key="edu1_degree">Higher Education Degree: Mathematics & Informatics
+                        </h3>
+                        <h4 class="edu-school" data-key="edu1_school">Chirchik State Pedagogical University of Tashkent
+                            Region</h4>
+                        <p class="edu-desc" data-key="edu1_desc">Specialization in Mathematics, Computer Science, and
+                            Algorithmic Foundations. Deep study of mathematical modeling, computational logic, and data
+                            structures.</p>
+                    </div>
+
+                    <div class="education-card">
+                        <div class="edu-icon bg-cyan-glow"><i class="fa-solid fa-certificate"></i></div>
+                        <span class="edu-date">2025</span>
+                        <h3 class="edu-degree" data-key="edu2_degree">Python Programming Specialization</h3>
+                        <h4 class="edu-school" data-key="edu2_school">Coursera Professional Certification</h4>
+                        <p class="edu-desc" data-key="edu2_desc">Professional development certification covering
+                            software engineering paradigms, OOP design, API web integrations, and database operations in
+                            Python.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section section-padding" id="contact">
+            <div class="container">
+                <div class="section-header text-center">
+                    <div class="section-pill" data-key="contact_pill"><i class="fa-solid fa-handshake text-purple"></i>
+                        Let's Collaborate</div>
+                    <h2 class="section-title gradient-text" data-key="contact_title">Get In Touch</h2>
+                    <p class="section-subtitle" data-key="contact_subtitle">Have a project, job opportunity, or AI
+                        automation need? Let's talk.</p>
+                </div>
+
+                <div class="grid grid-2 contact-grid">
+                    <!-- Contact Info Cards -->
+                    <div class="contact-info">
+                        <h3 class="contact-info-title" data-key="contact_info_title">Direct Channels</h3>
+                        <p class="contact-info-desc" data-key="contact_info_desc">
+                            Feel free to reach out via Telegram, email, or direct call. I typically respond within a few
+                            hours (GMT+5).
+                        </p>
+
+                        <div class="contact-cards">
+                            <a href="https://t.me/Naimjon_Inomjonov" target="_blank" rel="noopener noreferrer"
+                                class="contact-detail-card">
+                                <div class="contact-card-icon bg-purple-glow"><i class="fa-brands fa-telegram"></i>
+                                </div>
+                                <div class="contact-card-text">
+                                    <h4>Telegram (Fastest)</h4>
+                                    <p>@Naimjon_Inomjonov</p>
+                                </div>
+                                <i class="fa-solid fa-arrow-up-right-from-square contact-card-arrow"></i>
+                            </a>
+
+                            <a href="mailto:naiminomjonov@gmail.com" class="contact-detail-card">
+                                <div class="contact-card-icon bg-cyan-glow"><i class="fa-solid fa-envelope"></i></div>
+                                <div class="contact-card-text">
+                                    <h4>Email</h4>
+                                    <p>naiminomjonov@gmail.com</p>
+                                </div>
+                                <i class="fa-solid fa-arrow-up-right-from-square contact-card-arrow"></i>
+                            </a>
+
+                            <a href="tel:+998998370823" class="contact-detail-card">
+                                <div class="contact-card-icon bg-blue-glow"><i class="fa-solid fa-phone"></i></div>
+                                <div class="contact-card-text">
+                                    <h4>Phone</h4>
+                                    <p>+998 (99) 837-08-23</p>
+                                </div>
+                                <i class="fa-solid fa-arrow-up-right-from-square contact-card-arrow"></i>
+                            </a>
+
+                            <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                                class="contact-detail-card">
+                                <div class="contact-card-icon bg-pink-glow"><i class="fa-brands fa-github"></i></div>
+                                <div class="contact-card-text">
+                                    <h4>GitHub</h4>
+                                    <p>github.com/Inomjonoff</p>
+                                </div>
+                                <i class="fa-solid fa-arrow-up-right-from-square contact-card-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="contact-form-card">
+                        <form id="contact-form">
+                            <div class="form-group">
+                                <label for="name" data-key="form_name">Your Name</label>
+                                <input type="text" id="name" name="name" required placeholder="John Doe">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" data-key="form_email">Email or Telegram / Phone</label>
+                                <input type="text" id="email" name="email" required
+                                    placeholder="you@example.com or @username" data-key="form_email_placeholder">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="project_type" data-key="form_project_type">Project / Inquiry Type</label>
+                                <select id="project_type" name="project_type" class="custom-select">
+                                    <option value="AI Automation & LLMs">🤖 AI Automation & LLM Integration</option>
+                                    <option value="Backend Development / API">⚙️ Backend Development / REST API
+                                    </option>
+                                    <option value="Telegram Bot / Mini App">📱 Telegram Bot / Mini App</option>
+                                    <option value="Full Web Application / PWA">🌐 Web Application / PWA</option>
+                                    <option value="Full-time / Contract Hiring">💼 Full-time / Contract Hiring</option>
+                                    <option value="Consultation / Other">💬 Consultation / Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="message" data-key="form_message">Message</label>
+                                <textarea id="message" name="message" required rows="4"
+                                    placeholder="Tell me about your project, timeline, or requirements..."></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block" id="form-submit-btn">
+                                <span id="submit-text" data-key="form_submit">Send Message</span>
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                            <div id="form-status" class="form-status"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Case Study Interactive Modal Window -->
+    <div class="modal-overlay" id="case-study-modal" aria-hidden="true">
+        <div class="modal-window">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <span class="modal-tag" id="modal-tag">Case Study</span>
+                    <h3 class="modal-title" id="modal-title">EduAI — AI-Powered Education Platform</h3>
+                </div>
+                <button class="modal-close-btn" id="modal-close" aria-label="Close Modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="modal-body" id="modal-body">
+                <!-- Injected dynamically by script.js -->
+            </div>
+
+            <div class="modal-footer" id="modal-footer">
+                <!-- Action buttons injected dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-top">
+                <a href="#" class="logo">
+                    <span class="logo-code">&lt;</span><span class="logo-text">Naimjon</span><span
+                        class="logo-code">.dev /&gt;</span>
+                </a>
+                <p class="footer-tagline">Building practical AI-powered applications, automation systems, and backend
+                    solutions.</p>
+                <div class="footer-socials">
+                    <a href="https://t.me/Naimjon_Inomjonov" target="_blank" rel="noopener noreferrer"
+                        aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="mailto:naiminomjonov@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+                    <a href="https://github.com/Inomjonoff" target="_blank" rel="noopener noreferrer"
+                        aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Naimjon Inomjonov. <span data-key="footer_rights">All rights reserved.</span></p>
+                <p class="footer-crafted">Designed for high-impact engineering & product value.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive AI Assistant (PositronAI Widget) -->
+    <div class="chat-widget" id="chat-widget">
+        <!-- Floating Chat Button -->
+        <button class="chat-toggle" id="chat-toggle" aria-label="Chat with CV Bot">
+            <span class="chat-toggle-badge">1</span>
+            <i class="fa-solid fa-robot pulse-icon"></i>
+            <span class="chat-toggle-text" data-key="chat_bubble">Ask PositronAI!</span>
+        </button>
+
+        <!-- Chat Container -->
+        <div class="chat-container" id="chat-container">
+            <div class="chat-header">
+                <div class="chat-bot-info">
+                    <div class="chat-bot-avatar">
+                        <i class="fa-solid fa-robot"></i>
+                        <span class="chat-online-status"></span>
+                    </div>
+                    <div>
+                        <h4 class="chat-bot-name" data-key="chat_bot_name">PositronAI</h4>
+                        <p class="chat-bot-status" data-key="chat_online">Online & Ready</p>
+                    </div>
+                </div>
+                <button class="chat-close" id="chat-close" aria-label="Close Chat"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="chat-messages" id="chat-messages">
+                <div class="message incoming">
+                    <div class="msg-bubble" data-key="chat_greet">
+                        Hi! I am Naimjon's AI Assistant. Ask me anything about his skills, projects (EduAI, Pozitron,
+                        Mixaro), services, or contact details!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Predefined Questions -->
+            <div class="chat-suggestions" id="chat-suggestions">
+                <button class="suggestion-btn" data-question="projects" data-key="sug_projects">Tell me about EduAI &
+                    Projects</button>
+                <button class="suggestion-btn" data-question="services" data-key="sug_services">What services can you
+                    build?</button>
+                <button class="suggestion-btn" data-question="skills" data-key="sug_skills">What is your tech
+                    stack?</button>
+                <button class="suggestion-btn" data-question="contact" data-key="sug_contact">How do I hire or contact
+                    you?</button>
+            </div>
+
+            <!-- Message Input -->
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" data-key="chat_input_placeholder"
+                    placeholder="Ask something (e.g. 'EduAI', 'FastAPI', 'Automation')...">
+                <button id="chat-send" aria-label="Send"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JavaScript File -->
+    <script src="script.js"></script>
 </body>
+
 </html>
