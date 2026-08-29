@@ -575,7 +575,7 @@ const caseStudies = {
     eduai: {
         tag: "Flagship 01 · Case Study",
         title: "EduAI — AI-Powered Interactive Education Platform",
-        github: "https://github.com/Inomjonoff",
+        github: "https://github.com/Inomjonoff/eduai",
         demo: "#contact",
         content: {
             uz: `
@@ -680,7 +680,7 @@ Instant Score + Mistake Breakdown + Learning Analytics</pre>
     pozitron: {
         tag: "Flagship 02 · Case Study",
         title: "Pozitron Academy — Language Learning & Spaced Repetition Platform",
-        github: "https://github.com/Inomjonoff",
+        github: "https://github.com/Inomjonoff/pozitron-academy",
         demo: "#contact",
         content: {
             uz: `
@@ -875,7 +875,7 @@ Instant Score + Mistake Breakdown + Learning Analytics</pre>
     dictionary: {
         tag: "Flagship 05 · Case Study",
         title: "Thematic Synonym Dictionary — Android Application",
-        github: "https://github.com/Inomjonoff",
+        github: "https://github.com/Inomjonoff/thematic-synonym-dictionary",
         demo: "#contact",
         content: {
             uz: `
