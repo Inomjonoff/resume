@@ -68,13 +68,13 @@ portfolio: https://naimjon.uz
 <table>
   <tr>
     <td width="50%" valign="top">
-      <h3>🧠 <a href="https://naimjon.vercel.app/#projects">Remember.uz</a></h3>
+      <h3>🧠 <a href="https://naimjon.uz/#projects">Remember.uz</a></h3>
       <p><b>Timeline:</b> <code>2026 — Present</code> | <code>In Development</code></p>
       <p>AI-driven personal memory and contextual knowledge platform connecting thoughts, conversations, and workflows into an intelligent recall engine.</p>
       <p><b>Stack:</b> <code>Python</code> <code>FastAPI</code> <code>PostgreSQL</code> <code>AI Models</code> <code>Docker</code></p>
     </td>
     <td width="50%" valign="top">
-      <h3>🎓 <a href="https://naimjon.vercel.app/#projects">Pozitron Academy</a></h3>
+      <h3>🎓 <a href="https://naimjon.uz/#projects">Pozitron Academy</a></h3>
       <p><b>Timeline:</b> <code>2025 — Present</code> | <code>In Development</code></p>
       <p>Open, community-driven peer-to-peer platform designed for accessible, barrier-free language acquisition and practical knowledge sharing.</p>
       <p><b>Stack:</b> <code>Python</code> <code>Telegram Bots</code> <code>Web Stack</code> <code>UX Architecture</code></p>
@@ -82,13 +82,13 @@ portfolio: https://naimjon.uz
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <h3>🛍️ <a href="https://naimjon.vercel.app/#projects">Mixaro Shop</a></h3>
+      <h3>🛍️ <a href="https://naimjon.uz/#projects">Mixaro Shop</a></h3>
       <p><b>Timeline:</b> <code>2025 — Present</code> | <code>In Development</code></p>
       <p>China-to-Uzbekistan dropshipping automated ecosystem featuring Telegram ordering bots, web catalog, and Telegram Mini App integration.</p>
       <p><b>Stack:</b> <code>Python</code> <code>aiogram</code> <code>PostgreSQL</code> <code>Redis</code> <code>Docker</code></p>
     </td>
     <td width="50%" valign="top">
-      <h3>🤖 <a href="https://naimjon.vercel.app/#projects">EduAI</a></h3>
+      <h3>🤖 <a href="https://naimjon.uz/#projects">EduAI</a></h3>
       <p><b>Timeline:</b> <code>2025 — Present</code> | <code>Active Development</code></p>
       <p>Practice-first intelligent tutoring platform replacing passive video lectures with real-time code evaluation, math reasoning, and interactive feedback.</p>
       <p><b>Stack:</b> <code>Python</code> <code>LLM API</code> <code>System Design</code> <code>Automation</code></p>
