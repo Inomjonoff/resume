@@ -1259,9 +1259,8 @@ function initChatBot() {
         chatSuggestions.addEventListener('click', (e) => {
             const btn = e.target.closest('.suggestion-btn');
             if (btn) {
-                const questionKey = btn.getAttribute('data-question');
-                const questionText = btn.textContent;
-                handleUserMessage(questionText, questionKey);
+                const questionText = btn.textContent.trim();
+                handleUserMessage(questionText);
             }
         });
     }
@@ -1273,51 +1272,101 @@ function initChatBot() {
         });
     }
 
+    // Conversation history for AI context
+    const chatHistory = [];
+
     function sendMessageFromInput() {
         const text = chatInput.value.trim();
         if (!text) return;
-
-        let questionKey = 'fallback';
-        const lower = text.toLowerCase();
-
-        if (lower.includes('project') || lower.includes('loyiha') || lower.includes('проект') || lower.includes('eduai') || lower.includes('mixaro') || lower.includes('pozitron')) {
-            questionKey = 'projects';
-        } else if (lower.includes('service') || lower.includes('xizmat') || lower.includes('услуг') || lower.includes('build') || lower.includes('qila olas')) {
-            questionKey = 'services';
-        } else if (lower.includes('skill') || lower.includes('stek') || lower.includes('стек') || lower.includes('python') || lower.includes('fastapi')) {
-            questionKey = 'skills';
-        } else if (lower.includes('contact') || lower.includes('aloq') || lower.includes('связ') || lower.includes('hire') || lower.includes('telegram') || lower.includes('email')) {
-            questionKey = 'contact';
-        }
-
-        handleUserMessage(text, questionKey);
         chatInput.value = '';
+        handleUserMessage(text);
     }
 
-    function handleUserMessage(userText, questionKey) {
+    async function handleUserMessage(userText) {
         appendChatMessage(userText, 'outgoing');
+        const prevHistory = chatHistory.slice(-10);
+        chatHistory.push({ role: 'user', text: userText });
 
-        // Typing effect
+        // Typing indicator
         const typingEl = document.createElement('div');
         typingEl.className = 'message incoming typing-msg';
-        typingEl.innerHTML = `<div class="msg-bubble">...</div>`;
+        typingEl.innerHTML = `<div class="msg-bubble"><span class="typing-dots"><span>.</span><span>.</span><span>.</span></span></div>`;
         chatMessages.appendChild(typingEl);
         scrollChatBottom();
 
-        setTimeout(() => {
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: userText,
+                    history: prevHistory
+                })
+            });
+
             if (typingEl.parentNode) typingEl.remove();
 
-            let reply = '';
-            const dict = translations[currentLang] || translations.en;
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
 
-            if (questionKey === 'projects') reply = dict.chat_msg_projects;
-            else if (questionKey === 'services') reply = dict.chat_msg_services;
-            else if (questionKey === 'skills') reply = dict.chat_msg_skills;
-            else if (questionKey === 'contact') reply = dict.chat_msg_contact;
-            else reply = dict.chat_msg_fallback;
+            const data = await response.json();
 
+            if (data.text) {
+                appendChatMessage(data.text, 'incoming');
+                chatHistory.push({ role: 'model', text: data.text });
+            } else if (data.fallback || data.error) {
+                const reply = getLocalFallback(userText);
+                appendChatMessage(reply, 'incoming');
+                chatHistory.push({ role: 'model', text: reply });
+            } else {
+                throw new Error('Empty response');
+            }
+        } catch (err) {
+            console.error('Chat error:', err);
+            if (typingEl.parentNode) typingEl.remove();
+
+            const reply = getLocalFallback(userText);
             appendChatMessage(reply, 'incoming');
-        }, 600);
+            chatHistory.push({ role: 'model', text: reply });
+        }
+    }
+
+    function getLocalFallback(text) {
+        const dict = translations[currentLang] || translations.en;
+        const lower = text.toLowerCase();
+
+        if (lower.includes('project') || lower.includes('loyiha') || lower.includes('проект') || lower.includes('eduai') || lower.includes('mixaro') || lower.includes('pozitron') || lower.includes('remember')) {
+            return dict.chat_msg_projects;
+        } else if (lower.includes('service') || lower.includes('xizmat') || lower.includes('услуг') || lower.includes('build') || lower.includes('qila olas')) {
+            return dict.chat_msg_services;
+        } else if (lower.includes('skill') || lower.includes('stek') || lower.includes('стек') || lower.includes('python') || lower.includes('fastapi')) {
+            return dict.chat_msg_skills;
+        } else if (lower.includes('contact') || lower.includes('aloq') || lower.includes('связ') || lower.includes('hire') || lower.includes('telegram') || lower.includes('email')) {
+            return dict.chat_msg_contact;
+        }
+        return dict.chat_msg_fallback;
+    }
+
+    function formatMarkdown(text) {
+        if (!text) return '';
+        let escaped = text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
+        // Bold **text**
+        escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Italic *text*
+        escaped = escaped.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        // Inline code `code`
+        escaped = escaped.replace(/`([^`]+)`/g, '<code>$1</code>');
+        // Bullet points
+        escaped = escaped.replace(/^[•\-\*]\s+(.*)$/gm, '• $1');
+        // Line breaks
+        escaped = escaped.replace(/\n/g, '<br>');
+
+        return escaped;
     }
 
     function appendChatMessage(text, type) {
@@ -1326,7 +1375,7 @@ function initChatBot() {
 
         const bubble = document.createElement('div');
         bubble.className = 'msg-bubble';
-        bubble.innerHTML = text.replace(/\n/g, '<br>');
+        bubble.innerHTML = formatMarkdown(text);
 
         msgDiv.appendChild(bubble);
         chatMessages.appendChild(msgDiv);

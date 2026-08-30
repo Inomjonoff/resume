@@ -1,21 +1,21 @@
 <div align="center">
 
   <!-- Header Banner / Title -->
-  <a href="https://naimjon.vercel.app" target="_blank">
+  <a href="https://naimjon.uz" target="_blank">
     <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=1,12,24,31&height=220&section=header&text=Naimjon%20Inomjonov&fontSize=42&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Python%20Backend%20Developer%20%7C%20System%20Architect%20%7C%20Tech%20Builder&descFontSize=18&descColor=00f2fe&descAlignY=60" width="100%" alt="Naimjon Header Banner"/>
   </a>
 
   <!-- Animated Typing Subtitle -->
-  <a href="https://naimjon.vercel.app">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=20&duration=3000&pause=1000&color=00F2FE&center=true&vCenter=true&multiline=false&width=650&height=50&lines=Building+scalable+backend+systems+with+Python;Designing+intelligent+AI-driven+architectures;Founder+of+Remember.uz+%26+Pozitron+Academy;Explore+my+live+portfolio+at+naimjon.vercel.app" alt="Typing SVG" />
+  <a href="https://naimjon.uz">
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=20&duration=3000&pause=1000&color=00F2FE&center=true&vCenter=true&multiline=false&width=650&height=50&lines=Building+scalable+backend+systems+with+Python;Designing+intelligent+AI-driven+architectures;Founder+of+Remember.uz+%26+Pozitron+Academy;Explore+my+live+portfolio+at+naimjon.uz" alt="Typing SVG" />
   </a>
 
   <br/>
 
   <!-- Social Quick Badges -->
   <p align="center">
-    <a href="https://naimjon.vercel.app" target="_blank">
-      <img src="https://img.shields.io/badge/🌐_Portfolio-naimjon.vercel.app-8A2BE2?style=for-the-badge&logoColor=white" alt="Portfolio" />
+    <a href="https://naimjon.uz" target="_blank">
+      <img src="https://img.shields.io/badge/🌐_Portfolio-naimjon.uz-8A2BE2?style=for-the-badge&logoColor=white" alt="Portfolio" />
     </a>
     <a href="https://t.me/Naimjon_Inomjonov" target="_blank">
       <img src="https://img.shields.io/badge/Telegram-@Naimjon__Inomjonov-229ED9?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram" />
@@ -37,7 +37,7 @@ role: Python Backend Developer & IT Specialist
 location: Tashkent Region, Uzbekistan 🇺🇿
 focus: Scalable Backends, Async Bots, Distributed Systems & AI Integrations
 philosophy: "Systemic thinking — Architecture over isolated code"
-portfolio: https://naimjon.vercel.app
+portfolio: https://naimjon.uz
 ```
 
 - 💡 **What I do:** Building robust backend engines, asynchronous microservices, Telegram ecosystem applications, and AI integrations.
@@ -116,7 +116,7 @@ portfolio: https://naimjon.vercel.app
 ### 📬 Connect With Me
 
 <div align="center">
-  <a href="https://naimjon.vercel.app" target="_blank">
+  <a href="https://naimjon.uz" target="_blank">
     <img src="https://img.shields.io/badge/Live_Portfolio-000000?style=for-the-badge&logo=vercel&logoColor=white&labelColor=7928CA" alt="Portfolio" />
   </a>
   &nbsp;

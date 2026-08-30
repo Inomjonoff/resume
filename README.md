@@ -6,7 +6,7 @@
   <b>Production-Grade Engineering Showcase, Interactive Case Studies, Multilingual Engine & AI Assistant</b>
 </p>
 
-[![Live Site](https://img.shields.io/badge/Live_Portfolio-naimjon.vercel.app-8A2BE2?style=for-the-badge&logo=vercel&logoColor=white)](https://naimjon.vercel.app)
+[![Live Site](https://img.shields.io/badge/Live_Portfolio-naimjon.uz-8A2BE2?style=for-the-badge&logo=vercel&logoColor=white)](https://naimjon.uz)
 [![HTML5 / CSS3](https://img.shields.io/badge/Frontend-Vanilla_HTML5_%26_CSS3-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://developer.mozilla.org)
 [![JavaScript](https://img.shields.io/badge/Logic-Modern_JavaScript_ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org)
 [![Vercel](https://img.shields.io/badge/Deployment-Vercel_Edge-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com)
@@ -18,7 +18,7 @@
 
 ## 📌 Executive Summary
 
-**Portfolio 2.0** (`naimjon.vercel.app`) is the official web portfolio and product showcase for **Naimjon Inomjonov**, a **Python Backend & AI Automation Developer**.
+**Portfolio 2.0** (`naimjon.uz`) is the official web portfolio and product showcase for **Naimjon Inomjonov**, a **Python Backend & AI Automation Developer**.
 
 Engineered for instant 5-second technical positioning, it highlights flagship systems engineering, business automation, Telegram ecosystems, and AI integrations.
 
