@@ -1,5 +1,5 @@
 // /api/chat.js
-// Universal Vercel Serverless / Edge Function for ultra-fast Gemini streaming with Naimjon's CV context.
+// Vercel Serverless Function for ultra-fast Gemini chat responses with Naimjon's CV context.
 
 export const maxDuration = 30;
 
@@ -65,92 +65,44 @@ NAIMJON INOMJONOV — PROFIL MA'LUMOTLARI
 - Coursera (Python Programming Professional Certificate, 2025)
 `;
 
-async function parseBody(req) {
-    if (req.body && typeof req.body === 'object') {
-        return req.body;
-    }
-    if (typeof req.json === 'function') {
-        try {
-            return await req.json();
-        } catch (e) {}
-    }
-    return new Promise((resolve) => {
-        let data = '';
-        if (typeof req.on === 'function') {
-            req.on('data', chunk => { data += chunk; });
-            req.on('end', () => {
-                try {
-                    resolve(JSON.parse(data || '{}'));
-                } catch (e) {
-                    resolve({});
-                }
-            });
-            req.on('error', () => resolve({}));
-        } else {
-            resolve({});
-        }
-    });
-}
-
-function sendResponse(res, statusCode, data) {
-    const jsonStr = JSON.stringify(data);
-    if (res && typeof res.writeHead === 'function') {
-        res.writeHead(statusCode, {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET,OPTIONS,POST,PUT,DELETE',
-            'Access-Control-Allow-Headers': '*'
-        });
-        res.end(jsonStr);
-        return;
-    }
-    if (res && typeof res.status === 'function') {
-        return res.status(statusCode).json(data);
-    }
-    return new Response(jsonStr, {
-        status: statusCode,
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-        }
-    });
-}
-
 export default async function handler(req, res) {
-    // 1. Handle CORS preflight
+    // 1. Enable CORS
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    );
+
     if (req.method === 'OPTIONS') {
-        if (res && typeof res.writeHead === 'function') {
-            res.writeHead(200, {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET,OPTIONS,POST,PUT,DELETE',
-                'Access-Control-Allow-Headers': '*'
-            });
-            return res.end();
-        }
-        return new Response(null, {
-            status: 200,
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET,OPTIONS,POST,PUT,DELETE',
-                'Access-Control-Allow-Headers': '*'
-            }
-        });
+        return res.status(200).end();
     }
 
     if (req.method !== 'POST') {
-        return sendResponse(res, 405, { error: 'Method not allowed' });
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const body = await parseBody(req);
-    const { message, history, stream = true } = body;
+    // 2. Parse Body safely
+    let body = req.body;
+    if (typeof body === 'string') {
+        try {
+            body = JSON.parse(body);
+        } catch (e) {
+            body = {};
+        }
+    }
+    body = body || {};
+
+    const { message, history } = body;
 
     if (!message || typeof message !== 'string' || !message.trim()) {
-        return sendResponse(res, 400, { error: 'Message is required' });
+        return res.status(400).json({ error: 'Message is required' });
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        return sendResponse(res, 500, { error: 'Gemini API Key is not configured.', fallback: true });
+        return res.status(500).json({ error: 'Gemini API Key is not configured.', fallback: true });
     }
 
     const contents = [];
@@ -181,77 +133,7 @@ export default async function handler(req, res) {
         }
     };
 
-    // Streaming mode with Node ServerResponse
-    if (stream && res && typeof res.writeHead === 'function') {
-        for (const model of FAST_MODELS) {
-            try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${apiKey}`;
-                const geminiRes = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (geminiRes.ok && geminiRes.body) {
-                    res.writeHead(200, {
-                        'Content-Type': 'text/event-stream; charset=utf-8',
-                        'Cache-Control': 'no-cache, no-transform',
-                        'Connection': 'keep-alive',
-                        'Access-Control-Allow-Origin': '*',
-                        'X-Accel-Buffering': 'no'
-                    });
-
-                    const reader = geminiRes.body.getReader();
-                    const decoder = new TextDecoder();
-                    let buffer = '';
-
-                    while (true) {
-                        const { value, done } = await reader.read();
-                        if (done) break;
-
-                        buffer += decoder.decode(value, { stream: true });
-                        const lines = buffer.split('\n');
-                        buffer = lines.pop() || '';
-
-                        for (const line of lines) {
-                            if (line.startsWith('data: ')) {
-                                const jsonStr = line.slice(6).trim();
-                                if (jsonStr && jsonStr !== '[DONE]') {
-                                    try {
-                                        const parsed = JSON.parse(jsonStr);
-                                        const textChunk = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
-                                        if (textChunk) {
-                                            res.write(`data: ${JSON.stringify({ text: textChunk })}\n\n`);
-                                        }
-                                    } catch (e) {}
-                                }
-                            }
-                        }
-                    }
-
-                    if (buffer.startsWith('data: ')) {
-                        const jsonStr = buffer.slice(6).trim();
-                        if (jsonStr && jsonStr !== '[DONE]') {
-                            try {
-                                const parsed = JSON.parse(jsonStr);
-                                const textChunk = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
-                                if (textChunk) {
-                                    res.write(`data: ${JSON.stringify({ text: textChunk })}\n\n`);
-                                }
-                            } catch (e) {}
-                        }
-                    }
-
-                    res.write('data: [DONE]\n\n');
-                    return res.end();
-                }
-            } catch (err) {
-                console.warn(`Model ${model} stream error, trying next fast model:`, err.message);
-            }
-        }
-    }
-
-    // Fallback: Non-streaming JSON mode
+    // 3. Query Fast Models with immediate failover
     for (const model of FAST_MODELS) {
         try {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -265,13 +147,13 @@ export default async function handler(req, res) {
                 const data = await response.json();
                 const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
                 if (responseText.trim()) {
-                    return sendResponse(res, 200, { text: responseText.trim(), model });
+                    return res.status(200).json({ text: responseText.trim(), model });
                 }
             }
         } catch (err) {
-            console.warn(`Model ${model} JSON error:`, err.message);
+            console.warn(`Model ${model} error:`, err.message);
         }
     }
 
-    return sendResponse(res, 502, { error: 'Failed to communicate with AI models.', fallback: true });
+    return res.status(502).json({ error: 'Failed to communicate with AI models.', fallback: true });
 }

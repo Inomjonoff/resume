@@ -1388,7 +1388,7 @@ function initChatBot() {
                 const data = await response.json();
 
                 if (data.text) {
-                    appendChatMessage(data.text, 'incoming');
+                    typewriterChatMessage(data.text, 'incoming');
                     chatHistory.push({ role: 'model', text: data.text });
                 } else {
                     const reply = getLocalFallback(userText);
@@ -1404,6 +1404,28 @@ function initChatBot() {
             appendChatMessage(reply, 'incoming');
             chatHistory.push({ role: 'model', text: reply });
         }
+    }
+
+    function typewriterChatMessage(fullText, type) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${type}`;
+        const bubble = document.createElement('div');
+        bubble.className = 'msg-bubble';
+        msgDiv.appendChild(bubble);
+        chatMessages.appendChild(msgDiv);
+
+        let charIdx = 0;
+        const step = Math.max(2, Math.floor(fullText.length / 30));
+        
+        function typeStep() {
+            charIdx = Math.min(fullText.length, charIdx + step);
+            bubble.innerHTML = formatMarkdown(fullText.slice(0, charIdx));
+            scrollChatBottom();
+            if (charIdx < fullText.length) {
+                requestAnimationFrame(typeStep);
+            }
+        }
+        typeStep();
     }
 
     function getLocalFallback(text) {
