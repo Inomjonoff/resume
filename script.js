@@ -1300,27 +1300,95 @@ function initChatBot() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     message: userText,
-                    history: prevHistory
+                    history: prevHistory,
+                    stream: true
                 })
             });
-
-            if (typingEl.parentNode) typingEl.remove();
 
             if (!response.ok) {
                 throw new Error(`API error: ${response.status}`);
             }
 
-            const data = await response.json();
+            const contentType = response.headers.get('content-type') || '';
 
-            if (data.text) {
-                appendChatMessage(data.text, 'incoming');
-                chatHistory.push({ role: 'model', text: data.text });
-            } else if (data.fallback || data.error) {
-                const reply = getLocalFallback(userText);
-                appendChatMessage(reply, 'incoming');
-                chatHistory.push({ role: 'model', text: reply });
+            // Handle Real-time Streaming SSE
+            if (contentType.includes('text/event-stream') && response.body && response.body.getReader) {
+                if (typingEl.parentNode) typingEl.remove();
+
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'message incoming';
+                const bubble = document.createElement('div');
+                bubble.className = 'msg-bubble';
+                msgDiv.appendChild(bubble);
+                chatMessages.appendChild(msgDiv);
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let accumulatedText = '';
+                let streamBuffer = '';
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    streamBuffer += decoder.decode(value, { stream: true });
+                    const lines = streamBuffer.split('\n');
+                    streamBuffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        const trimmed = line.trim();
+                        if (trimmed.startsWith('data: ')) {
+                            const dataPayload = trimmed.slice(6).trim();
+                            if (dataPayload === '[DONE]') continue;
+                            try {
+                                const parsed = JSON.parse(dataPayload);
+                                if (parsed.text) {
+                                    accumulatedText += parsed.text;
+                                    bubble.innerHTML = formatMarkdown(accumulatedText);
+                                    scrollChatBottom();
+                                }
+                            } catch (e) {
+                                // partial or non-json chunk
+                            }
+                        }
+                    }
+                }
+
+                if (streamBuffer.trim().startsWith('data: ')) {
+                    const dataPayload = streamBuffer.trim().slice(6).trim();
+                    if (dataPayload !== '[DONE]') {
+                        try {
+                            const parsed = JSON.parse(dataPayload);
+                            if (parsed.text) {
+                                accumulatedText += parsed.text;
+                                bubble.innerHTML = formatMarkdown(accumulatedText);
+                            }
+                        } catch (e) {}
+                    }
+                }
+
+                if (accumulatedText.trim()) {
+                    chatHistory.push({ role: 'model', text: accumulatedText.trim() });
+                } else {
+                    const reply = getLocalFallback(userText);
+                    bubble.innerHTML = formatMarkdown(reply);
+                    chatHistory.push({ role: 'model', text: reply });
+                }
+                scrollChatBottom();
+
             } else {
-                throw new Error('Empty response');
+                // Handle Standard JSON Response
+                if (typingEl.parentNode) typingEl.remove();
+                const data = await response.json();
+
+                if (data.text) {
+                    appendChatMessage(data.text, 'incoming');
+                    chatHistory.push({ role: 'model', text: data.text });
+                } else {
+                    const reply = getLocalFallback(userText);
+                    appendChatMessage(reply, 'incoming');
+                    chatHistory.push({ role: 'model', text: reply });
+                }
             }
         } catch (err) {
             console.error('Chat error:', err);
@@ -1386,3 +1454,4 @@ function initChatBot() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 }
+
