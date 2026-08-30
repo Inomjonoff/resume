@@ -1294,8 +1294,16 @@ function initChatBot() {
         chatMessages.appendChild(typingEl);
         scrollChatBottom();
 
+        const removeTyping = () => {
+            if (typingEl && typingEl.parentNode) {
+                typingEl.remove();
+            }
+        };
+
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4500);
+        const timeoutId = setTimeout(() => {
+            controller.abort();
+        }, 5000);
 
         try {
             const response = await fetch('/api/chat', {
@@ -1309,122 +1317,31 @@ function initChatBot() {
             });
 
             clearTimeout(timeoutId);
+            removeTyping();
 
             if (!response.ok) {
                 throw new Error(`API error: ${response.status}`);
             }
 
-            const contentType = response.headers.get('content-type') || '';
+            const data = await response.json();
 
-            // Handle Real-time Streaming SSE
-            if (contentType.includes('text/event-stream') && response.body && response.body.getReader) {
-                if (typingEl.parentNode) typingEl.remove();
-
-                const msgDiv = document.createElement('div');
-                msgDiv.className = 'message incoming';
-                const bubble = document.createElement('div');
-                bubble.className = 'msg-bubble';
-                msgDiv.appendChild(bubble);
-                chatMessages.appendChild(msgDiv);
-
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder();
-                let accumulatedText = '';
-                let streamBuffer = '';
-
-                while (true) {
-                    const { value, done } = await reader.read();
-                    if (done) break;
-
-                    streamBuffer += decoder.decode(value, { stream: true });
-                    const lines = streamBuffer.split('\n');
-                    streamBuffer = lines.pop() || '';
-
-                    for (const line of lines) {
-                        const trimmed = line.trim();
-                        if (trimmed.startsWith('data: ')) {
-                            const dataPayload = trimmed.slice(6).trim();
-                            if (dataPayload === '[DONE]') continue;
-                            try {
-                                const parsed = JSON.parse(dataPayload);
-                                if (parsed.text) {
-                                    accumulatedText += parsed.text;
-                                    bubble.innerHTML = formatMarkdown(accumulatedText);
-                                    scrollChatBottom();
-                                }
-                            } catch (e) {
-                                // partial or non-json chunk
-                            }
-                        }
-                    }
-                }
-
-                if (streamBuffer.trim().startsWith('data: ')) {
-                    const dataPayload = streamBuffer.trim().slice(6).trim();
-                    if (dataPayload !== '[DONE]') {
-                        try {
-                            const parsed = JSON.parse(dataPayload);
-                            if (parsed.text) {
-                                accumulatedText += parsed.text;
-                                bubble.innerHTML = formatMarkdown(accumulatedText);
-                            }
-                        } catch (e) {}
-                    }
-                }
-
-                if (accumulatedText.trim()) {
-                    chatHistory.push({ role: 'model', text: accumulatedText.trim() });
-                } else {
-                    const reply = getLocalFallback(userText);
-                    bubble.innerHTML = formatMarkdown(reply);
-                    chatHistory.push({ role: 'model', text: reply });
-                }
-                scrollChatBottom();
-
+            if (data && data.text) {
+                appendChatMessage(data.text, 'incoming');
+                chatHistory.push({ role: 'model', text: data.text });
             } else {
-                // Handle Standard JSON Response
-                if (typingEl.parentNode) typingEl.remove();
-                const data = await response.json();
-
-                if (data.text) {
-                    typewriterChatMessage(data.text, 'incoming');
-                    chatHistory.push({ role: 'model', text: data.text });
-                } else {
-                    const reply = getLocalFallback(userText);
-                    appendChatMessage(reply, 'incoming');
-                    chatHistory.push({ role: 'model', text: reply });
-                }
+                const reply = getLocalFallback(userText);
+                appendChatMessage(reply, 'incoming');
+                chatHistory.push({ role: 'model', text: reply });
             }
         } catch (err) {
             console.error('Chat error:', err);
-            if (typingEl.parentNode) typingEl.remove();
+            clearTimeout(timeoutId);
+            removeTyping();
 
             const reply = getLocalFallback(userText);
             appendChatMessage(reply, 'incoming');
             chatHistory.push({ role: 'model', text: reply });
         }
-    }
-
-    function typewriterChatMessage(fullText, type) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message ${type}`;
-        const bubble = document.createElement('div');
-        bubble.className = 'msg-bubble';
-        msgDiv.appendChild(bubble);
-        chatMessages.appendChild(msgDiv);
-
-        let charIdx = 0;
-        const step = Math.max(2, Math.floor(fullText.length / 30));
-        
-        function typeStep() {
-            charIdx = Math.min(fullText.length, charIdx + step);
-            bubble.innerHTML = formatMarkdown(fullText.slice(0, charIdx));
-            scrollChatBottom();
-            if (charIdx < fullText.length) {
-                requestAnimationFrame(typeStep);
-            }
-        }
-        typeStep();
     }
 
     function getLocalFallback(text) {
