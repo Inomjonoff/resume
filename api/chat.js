@@ -1,9 +1,5 @@
 // /api/chat.js
-// Vercel Edge Function to securely query Gemini API using Naimjon's CV context with ultra-fast streaming & fallback.
-
-export const config = {
-    runtime: 'edge'
-};
+// Vercel Serverless Function to securely query Gemini API using Naimjon's CV context with ultra-fast streaming.
 
 export const maxDuration = 30;
 
@@ -14,58 +10,8 @@ const FAST_MODELS = [
     'gemini-3.5-flash'
 ];
 
-export default async function handler(req) {
-    const corsHeaders = {
-        'Access-Control-Allow-Credentials': 'true',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
-        'Access-Control-Allow-Headers': 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-    };
-
-    if (req.method === 'OPTIONS') {
-        return new Response(null, { status: 200, headers: corsHeaders });
-    }
-
-    if (req.method !== 'POST') {
-        return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-            status: 405,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        });
-    }
-
-    let body;
-    try {
-        body = await req.json();
-    } catch (e) {
-        return new Response(JSON.stringify({ error: 'Invalid JSON body' }), {
-            status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        });
-    }
-
-    const { message, history, stream = true } = body;
-
-    if (!message || typeof message !== 'string' || !message.trim()) {
-        return new Response(JSON.stringify({ error: 'Message is required' }), {
-            status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        });
-    }
-
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-        return new Response(JSON.stringify({
-            error: 'Gemini API Key is not configured.',
-            fallback: true
-        }), {
-            status: 500,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        });
-    }
-
-    // Naimjon's CV Context as System Instructions
-    const systemInstruction = `
-Siz PositronAI — Naimjon Inomjonovning shaxsiy veb-saytidagi aqlli, jonli, samimiy, tezkor va nihoyatda bilimdon AI assistentisiz.
+const SYSTEM_INSTRUCTION = `
+Siz PositronAI — Naimjon Inomjonovning shaxsiy veb-saytidagi aqlli, jonli, samimiy, o'ta tezkor va bilimdon AI assistentisiz.
 
 ENG MUHIM QOIDALAR (TEZLIK VA JONLI MULOQOT):
 1. JAVOBLARNI TEZ, ANIQ VA LO'NDA BERING:
@@ -119,6 +65,76 @@ NAIMJON INOMJONOV — PROFIL MA'LUMOTLARI
 - Coursera (Python Programming Professional Certificate, 2025)
 `;
 
+export default async function handler(req, res) {
+    // 1. Determine if this is Node.js Serverless Function (res exists) or Edge Function
+    const isNode = res && typeof res.setHeader === 'function';
+
+    const setHeader = (key, val) => {
+        if (isNode) res.setHeader(key, val);
+    };
+
+    setHeader('Access-Control-Allow-Credentials', 'true');
+    setHeader('Access-Control-Allow-Origin', '*');
+    setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    );
+
+    if (req.method === 'OPTIONS') {
+        if (isNode) {
+            return res.status(200).end();
+        } else {
+            return new Response(null, { status: 200 });
+        }
+    }
+
+    if (req.method !== 'POST') {
+        if (isNode) {
+            return res.status(405).json({ error: 'Method not allowed' });
+        } else {
+            return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
+        }
+    }
+
+    let parsedBody;
+    try {
+        if (typeof req.body === 'object' && req.body !== null) {
+            parsedBody = req.body;
+        } else if (typeof req.json === 'function') {
+            parsedBody = await req.json();
+        } else if (typeof req.body === 'string') {
+            parsedBody = JSON.parse(req.body);
+        } else {
+            parsedBody = {};
+        }
+    } catch (e) {
+        if (isNode) {
+            return res.status(400).json({ error: 'Invalid JSON body' });
+        } else {
+            return new Response(JSON.stringify({ error: 'Invalid JSON body' }), { status: 400 });
+        }
+    }
+
+    const { message, history, stream = true } = parsedBody;
+
+    if (!message || typeof message !== 'string' || !message.trim()) {
+        if (isNode) {
+            return res.status(400).json({ error: 'Message is required' });
+        } else {
+            return new Response(JSON.stringify({ error: 'Message is required' }), { status: 400 });
+        }
+    }
+
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+        if (isNode) {
+            return res.status(500).json({ error: 'Gemini API Key is not configured.', fallback: true });
+        } else {
+            return new Response(JSON.stringify({ error: 'Gemini API Key is not configured.', fallback: true }), { status: 500 });
+        }
+    }
+
     const contents = [];
     if (history && Array.isArray(history)) {
         history.forEach(item => {
@@ -139,7 +155,7 @@ NAIMJON INOMJONOV — PROFIL MA'LUMOTLARI
     const payload = {
         contents,
         systemInstruction: {
-            parts: [{ text: systemInstruction }]
+            parts: [{ text: SYSTEM_INSTRUCTION }]
         },
         generationConfig: {
             temperature: 0.6,
@@ -147,8 +163,8 @@ NAIMJON INOMJONOV — PROFIL MA'LUMOTLARI
         }
     };
 
-    // If streaming requested:
-    if (stream) {
+    // Streaming implementation
+    if (stream && isNode) {
         for (const model of FAST_MODELS) {
             try {
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${apiKey}`;
@@ -159,61 +175,56 @@ NAIMJON INOMJONOV — PROFIL MA'LUMOTLARI
                 });
 
                 if (geminiRes.ok && geminiRes.body) {
-                    const transformStream = new TransformStream({
-                        start(controller) {
-                            this.buffer = '';
-                            this.decoder = new TextDecoder();
-                            this.encoder = new TextEncoder();
-                        },
-                        transform(chunk, controller) {
-                            this.buffer += this.decoder.decode(chunk, { stream: true });
-                            const lines = this.buffer.split('\n');
-                            this.buffer = lines.pop() || '';
+                    res.writeHead(200, {
+                        'Content-Type': 'text/event-stream; charset=utf-8',
+                        'Cache-Control': 'no-cache, no-transform',
+                        'Connection': 'keep-alive',
+                        'X-Accel-Buffering': 'no'
+                    });
 
-                            for (const line of lines) {
-                                if (line.startsWith('data: ')) {
-                                    const jsonStr = line.slice(6).trim();
-                                    if (jsonStr && jsonStr !== '[DONE]') {
-                                        try {
-                                            const data = JSON.parse(jsonStr);
-                                            const textChunk = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                                            if (textChunk) {
-                                                controller.enqueue(this.encoder.encode(`data: ${JSON.stringify({ text: textChunk })}\n\n`));
-                                            }
-                                        } catch (e) {
-                                            // ignore parse error on partial chunk
+                    const reader = geminiRes.body.getReader();
+                    const decoder = new TextDecoder();
+                    let buffer = '';
+
+                    while (true) {
+                        const { value, done } = await reader.read();
+                        if (done) break;
+
+                        buffer += decoder.decode(value, { stream: true });
+                        const lines = buffer.split('\n');
+                        buffer = lines.pop() || '';
+
+                        for (const line of lines) {
+                            if (line.startsWith('data: ')) {
+                                const jsonStr = line.slice(6).trim();
+                                if (jsonStr && jsonStr !== '[DONE]') {
+                                    try {
+                                        const data = JSON.parse(jsonStr);
+                                        const textChunk = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                                        if (textChunk) {
+                                            res.write(`data: ${JSON.stringify({ text: textChunk })}\n\n`);
                                         }
-                                    }
+                                    } catch (e) {}
                                 }
                             }
-                        },
-                        flush(controller) {
-                            if (this.buffer) {
-                                if (this.buffer.startsWith('data: ')) {
-                                    const jsonStr = this.buffer.slice(6).trim();
-                                    if (jsonStr && jsonStr !== '[DONE]') {
-                                        try {
-                                            const data = JSON.parse(jsonStr);
-                                            const textChunk = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                                            if (textChunk) {
-                                                controller.enqueue(this.encoder.encode(`data: ${JSON.stringify({ text: textChunk })}\n\n`));
-                                            }
-                                        } catch (e) {}
-                                    }
-                                }
-                            }
-                            controller.enqueue(this.encoder.encode('data: [DONE]\n\n'));
                         }
-                    });
+                    }
 
-                    return new Response(geminiRes.body.pipeThrough(transformStream), {
-                        headers: {
-                            ...corsHeaders,
-                            'Content-Type': 'text/event-stream; charset=utf-8',
-                            'Cache-Control': 'no-cache, no-transform',
-                            'Connection': 'keep-alive'
+                    if (buffer.startsWith('data: ')) {
+                        const jsonStr = buffer.slice(6).trim();
+                        if (jsonStr && jsonStr !== '[DONE]') {
+                            try {
+                                const data = JSON.parse(jsonStr);
+                                const textChunk = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                                if (textChunk) {
+                                    res.write(`data: ${JSON.stringify({ text: textChunk })}\n\n`);
+                                }
+                            } catch (e) {}
                         }
-                    });
+                    }
+
+                    res.write('data: [DONE]\n\n');
+                    return res.end();
                 }
             } catch (err) {
                 console.warn(`Model ${model} stream error, trying next fast model:`, err.message);
@@ -221,7 +232,7 @@ NAIMJON INOMJONOV — PROFIL MA'LUMOTLARI
         }
     }
 
-    // Fallback: Non-streaming JSON mode across fast models
+    // Fallback: Non-streaming JSON mode
     for (const model of FAST_MODELS) {
         try {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -235,23 +246,28 @@ NAIMJON INOMJONOV — PROFIL MA'LUMOTLARI
                 const data = await response.json();
                 const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
                 if (responseText.trim()) {
-                    return new Response(JSON.stringify({ text: responseText.trim(), model }), {
-                        status: 200,
-                        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-                    });
+                    if (isNode) {
+                        return res.status(200).json({ text: responseText.trim(), model });
+                    } else {
+                        return new Response(JSON.stringify({ text: responseText.trim(), model }), {
+                            status: 200,
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                    }
                 }
             }
         } catch (err) {
-            console.warn(`Model ${model} non-stream error:`, err.message);
+            console.warn(`Model ${model} JSON error:`, err.message);
         }
     }
 
-    // If all models failed or offline
-    return new Response(JSON.stringify({
-        error: 'Failed to communicate with AI models.',
-        fallback: true
-    }), {
-        status: 502,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-    });
-}
+    // If all models fail
+    if (isNode) {
+        return res.status(502).json({ error: 'Failed to communicate with AI models.', fallback: true });
+    } else {
+        return new Response(JSON.stringify({ error: 'Failed to communicate with AI models.', fallback: true }), {
+            status: 502,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+}
