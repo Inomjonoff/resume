@@ -1,7 +1,7 @@
 // /api/chat.js
-// Vercel Serverless Function for ultra-fast Gemini chat responses with Naimjon's CV context.
+// Vercel Serverless Function for ultra-fast Gemini chat responses with strict timeouts and instant fallback.
 
-export const maxDuration = 30;
+export const maxDuration = 10;
 
 const FAST_MODELS = [
     'gemini-3.5-flash-lite',
@@ -83,7 +83,7 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    // 2. Parse Body safely
+    // 2. Parse Body
     let body = req.body;
     if (typeof body === 'string') {
         try {
@@ -129,19 +129,25 @@ export default async function handler(req, res) {
         },
         generationConfig: {
             temperature: 0.6,
-            maxOutputTokens: 500
+            maxOutputTokens: 400
         }
     };
 
-    // 3. Query Fast Models with immediate failover
+    // 3. Query Fast Models with strict 3.5s timeout per attempt
     for (const model of FAST_MODELS) {
         try {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 3500);
+
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: controller.signal,
                 body: JSON.stringify(payload)
             });
+
+            clearTimeout(timer);
 
             if (response.ok) {
                 const data = await response.json();
@@ -151,7 +157,7 @@ export default async function handler(req, res) {
                 }
             }
         } catch (err) {
-            console.warn(`Model ${model} error:`, err.message);
+            console.warn(`Model ${model} timeout or error:`, err.message);
         }
     }
 

@@ -1295,7 +1295,7 @@ function initChatBot() {
         scrollChatBottom();
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 12000);
+        const timeoutId = setTimeout(() => controller.abort(), 4500);
 
         try {
             const response = await fetch('/api/chat', {
@@ -1304,8 +1304,7 @@ function initChatBot() {
                 signal: controller.signal,
                 body: JSON.stringify({
                     message: userText,
-                    history: prevHistory,
-                    stream: true
+                    history: prevHistory
                 })
             });
 
