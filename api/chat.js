@@ -1,5 +1,5 @@
 // /api/chat.js
-// Vercel Serverless Function to securely query Gemini API using Naimjon's CV context with ultra-fast streaming.
+// Universal Vercel Serverless / Edge Function for ultra-fast Gemini streaming with Naimjon's CV context.
 
 export const maxDuration = 30;
 
@@ -65,74 +65,92 @@ NAIMJON INOMJONOV — PROFIL MA'LUMOTLARI
 - Coursera (Python Programming Professional Certificate, 2025)
 `;
 
-export default async function handler(req, res) {
-    // 1. Determine if this is Node.js Serverless Function (res exists) or Edge Function
-    const isNode = res && typeof res.setHeader === 'function';
-
-    const setHeader = (key, val) => {
-        if (isNode) res.setHeader(key, val);
-    };
-
-    setHeader('Access-Control-Allow-Credentials', 'true');
-    setHeader('Access-Control-Allow-Origin', '*');
-    setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-    setHeader(
-        'Access-Control-Allow-Headers',
-        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-    );
-
-    if (req.method === 'OPTIONS') {
-        if (isNode) {
-            return res.status(200).end();
+async function parseBody(req) {
+    if (req.body && typeof req.body === 'object') {
+        return req.body;
+    }
+    if (typeof req.json === 'function') {
+        try {
+            return await req.json();
+        } catch (e) {}
+    }
+    return new Promise((resolve) => {
+        let data = '';
+        if (typeof req.on === 'function') {
+            req.on('data', chunk => { data += chunk; });
+            req.on('end', () => {
+                try {
+                    resolve(JSON.parse(data || '{}'));
+                } catch (e) {
+                    resolve({});
+                }
+            });
+            req.on('error', () => resolve({}));
         } else {
-            return new Response(null, { status: 200 });
+            resolve({});
         }
+    });
+}
+
+function sendResponse(res, statusCode, data) {
+    const jsonStr = JSON.stringify(data);
+    if (res && typeof res.writeHead === 'function') {
+        res.writeHead(statusCode, {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET,OPTIONS,POST,PUT,DELETE',
+            'Access-Control-Allow-Headers': '*'
+        });
+        res.end(jsonStr);
+        return;
+    }
+    if (res && typeof res.status === 'function') {
+        return res.status(statusCode).json(data);
+    }
+    return new Response(jsonStr, {
+        status: statusCode,
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        }
+    });
+}
+
+export default async function handler(req, res) {
+    // 1. Handle CORS preflight
+    if (req.method === 'OPTIONS') {
+        if (res && typeof res.writeHead === 'function') {
+            res.writeHead(200, {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,OPTIONS,POST,PUT,DELETE',
+                'Access-Control-Allow-Headers': '*'
+            });
+            return res.end();
+        }
+        return new Response(null, {
+            status: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,OPTIONS,POST,PUT,DELETE',
+                'Access-Control-Allow-Headers': '*'
+            }
+        });
     }
 
     if (req.method !== 'POST') {
-        if (isNode) {
-            return res.status(405).json({ error: 'Method not allowed' });
-        } else {
-            return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
-        }
+        return sendResponse(res, 405, { error: 'Method not allowed' });
     }
 
-    let parsedBody;
-    try {
-        if (typeof req.body === 'object' && req.body !== null) {
-            parsedBody = req.body;
-        } else if (typeof req.json === 'function') {
-            parsedBody = await req.json();
-        } else if (typeof req.body === 'string') {
-            parsedBody = JSON.parse(req.body);
-        } else {
-            parsedBody = {};
-        }
-    } catch (e) {
-        if (isNode) {
-            return res.status(400).json({ error: 'Invalid JSON body' });
-        } else {
-            return new Response(JSON.stringify({ error: 'Invalid JSON body' }), { status: 400 });
-        }
-    }
-
-    const { message, history, stream = true } = parsedBody;
+    const body = await parseBody(req);
+    const { message, history, stream = true } = body;
 
     if (!message || typeof message !== 'string' || !message.trim()) {
-        if (isNode) {
-            return res.status(400).json({ error: 'Message is required' });
-        } else {
-            return new Response(JSON.stringify({ error: 'Message is required' }), { status: 400 });
-        }
+        return sendResponse(res, 400, { error: 'Message is required' });
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        if (isNode) {
-            return res.status(500).json({ error: 'Gemini API Key is not configured.', fallback: true });
-        } else {
-            return new Response(JSON.stringify({ error: 'Gemini API Key is not configured.', fallback: true }), { status: 500 });
-        }
+        return sendResponse(res, 500, { error: 'Gemini API Key is not configured.', fallback: true });
     }
 
     const contents = [];
@@ -159,12 +177,12 @@ export default async function handler(req, res) {
         },
         generationConfig: {
             temperature: 0.6,
-            maxOutputTokens: 600
+            maxOutputTokens: 500
         }
     };
 
-    // Streaming implementation
-    if (stream && isNode) {
+    // Streaming mode with Node ServerResponse
+    if (stream && res && typeof res.writeHead === 'function') {
         for (const model of FAST_MODELS) {
             try {
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:streamGenerateContent?alt=sse&key=${apiKey}`;
@@ -179,6 +197,7 @@ export default async function handler(req, res) {
                         'Content-Type': 'text/event-stream; charset=utf-8',
                         'Cache-Control': 'no-cache, no-transform',
                         'Connection': 'keep-alive',
+                        'Access-Control-Allow-Origin': '*',
                         'X-Accel-Buffering': 'no'
                     });
 
@@ -199,8 +218,8 @@ export default async function handler(req, res) {
                                 const jsonStr = line.slice(6).trim();
                                 if (jsonStr && jsonStr !== '[DONE]') {
                                     try {
-                                        const data = JSON.parse(jsonStr);
-                                        const textChunk = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                                        const parsed = JSON.parse(jsonStr);
+                                        const textChunk = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
                                         if (textChunk) {
                                             res.write(`data: ${JSON.stringify({ text: textChunk })}\n\n`);
                                         }
@@ -214,8 +233,8 @@ export default async function handler(req, res) {
                         const jsonStr = buffer.slice(6).trim();
                         if (jsonStr && jsonStr !== '[DONE]') {
                             try {
-                                const data = JSON.parse(jsonStr);
-                                const textChunk = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                                const parsed = JSON.parse(jsonStr);
+                                const textChunk = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
                                 if (textChunk) {
                                     res.write(`data: ${JSON.stringify({ text: textChunk })}\n\n`);
                                 }
@@ -246,14 +265,7 @@ export default async function handler(req, res) {
                 const data = await response.json();
                 const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
                 if (responseText.trim()) {
-                    if (isNode) {
-                        return res.status(200).json({ text: responseText.trim(), model });
-                    } else {
-                        return new Response(JSON.stringify({ text: responseText.trim(), model }), {
-                            status: 200,
-                            headers: { 'Content-Type': 'application/json' }
-                        });
-                    }
+                    return sendResponse(res, 200, { text: responseText.trim(), model });
                 }
             }
         } catch (err) {
@@ -261,13 +273,5 @@ export default async function handler(req, res) {
         }
     }
 
-    // If all models fail
-    if (isNode) {
-        return res.status(502).json({ error: 'Failed to communicate with AI models.', fallback: true });
-    } else {
-        return new Response(JSON.stringify({ error: 'Failed to communicate with AI models.', fallback: true }), {
-            status: 502,
-            headers: { 'Content-Type': 'application/json' }
-        });
-    }
+    return sendResponse(res, 502, { error: 'Failed to communicate with AI models.', fallback: true });
 }

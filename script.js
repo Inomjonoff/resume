@@ -1294,16 +1294,22 @@ function initChatBot() {
         chatMessages.appendChild(typingEl);
         scrollChatBottom();
 
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
+
         try {
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                signal: controller.signal,
                 body: JSON.stringify({
                     message: userText,
                     history: prevHistory,
                     stream: true
                 })
             });
+
+            clearTimeout(timeoutId);
 
             if (!response.ok) {
                 throw new Error(`API error: ${response.status}`);
